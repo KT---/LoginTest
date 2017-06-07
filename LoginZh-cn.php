@@ -5,26 +5,41 @@
 *	By			:KT
 *	Data		:2017年6月5日
 =======================================*/
-session_start();
-// echo $_SESSION['verifcode'].'<br/>';
-if(isset($_GET['act']))
-{
-    if($_GET['act'] == 'login')
+
+
+    //启用$_SESSION超级全局变量
+    session_start();
+    //定义变量标识符，防止inc、func文件恶意调用
+    define('Login_inc',true);
+    define('Login_func',true);
+    
+   require dirname(__FILE__).'/function/login.func.php';
+    // if(!($_SESSION['HTTP_REFERER'] == md5('index.php')))
+    // {
+    //     exit('非法登入！');
+    // }
+
+    //表单提交本页后进行验证
+    if(isset($_GET['act']) && $_GET['act'] == 'login')//判断$_GET['act']是否被定义，决定是否进行表单内容审核验证
     {
-//         print_r($_POST);
-//         echo $_POST['IdentityCoad'];
-        if(!($_POST['verifcode'] == $_SESSION['verifcode']))
+        if(!($_POST['verifcode'] == $_SESSION['verifcode']))//核对验证码verifcode
         {
-            echo "<script language=javascript>alert('验证码错误');history.back();</script>";
+             echo "<script language=javascript>alert('验证码错误');history.back();</script>";
         }
-        echo '登陆成功！';
-        print_r($_POST);
+        if(!($_SESSION['identitycode'] == $_POST['IdentityCode']))//验证唯一表示码$_SESSION['identitycode']
+        {
+             echo "<script language=javascript>alert('表单提交错误');history.back();</script>";
+        }
+        if(!_check_email($_POST['username']))//检查用户名email地址格式合法性
+        {
+            echo "<script language=javascript>alert('非法用户名');history.back();</script>";
+        }
+    //     print_r($_POST);
+        echo '登陆成功';
     }
-    else if ($_GET['act'] == 'register')
-    {
-        
-    }
-}
+
+
+    $_SESSION['identitycode'] = md5(mt_rand());
 ?>
 <!DOCTYPE html>
 <html lang="en" class="no-js"> 
@@ -59,7 +74,7 @@ if(isset($_GET['act']))
                     <div id="wrapper">
                         <div id="login" class="animate form">
                             <form method="post" action="LoginZh-cn.php?act=login"  autocomplete="on" >
-                                <input type="hidden" name="IdentityCoad" value=<?php echo md5(mt_rand());?>/>
+                                <input type="hidden" name="IdentityCode" value=<?php echo $_SESSION['identitycode'];?>>
                                 <h1>登陆</h1> 
                                 <p> 
                                     <label for="username"  data-icon="u" >账户名称 </label>
