@@ -5,8 +5,26 @@
 *	By			:KT
 *	Data		:2017年6月5日
 =======================================*/
-// session_start();
-// echo $_SESSION['verifcode'];
+session_start();
+// echo $_SESSION['verifcode'].'<br/>';
+if(isset($_GET['act']))
+{
+    if($_GET['act'] == 'login')
+    {
+//         print_r($_POST);
+//         echo $_POST['IdentityCoad'];
+        if(!($_POST['verifcode'] == $_SESSION['verifcode']))
+        {
+            echo "<script language=javascript>alert('验证码错误');history.back();</script>";
+        }
+        echo '登陆成功！';
+        print_r($_POST);
+    }
+    else if ($_GET['act'] == 'register')
+    {
+        
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en" class="no-js"> 
@@ -28,9 +46,9 @@
             <header>
                 <h1>奶油小猪<span>客户管理系统</span></h1>
 				<nav class="codrops-demos">
-					<a href="LoginZh-cn.php" class="current-demo">简体中文</a>
+<!-- 					<a href="LoginZh-cn.php" class="current-demo">简体中文</a>
 					<a href="index2.html">繁體中文</a>
-					<a href="index3.html">English</a>
+					<a href="index3.html">English</a> -->
 				</nav>
             </header>
             <section>				
@@ -40,7 +58,8 @@
                     <a class="hiddenanchor" id="tologin"></a>
                     <div id="wrapper">
                         <div id="login" class="animate form">
-                            <form method="post" action="LoginZh-cn.php"  autocomplete="on"> 
+                            <form method="post" action="LoginZh-cn.php?act=login"  autocomplete="on" >
+                                <input type="hidden" name="IdentityCoad" value=<?php echo md5(mt_rand());?>/>
                                 <h1>登陆</h1> 
                                 <p> 
                                     <label for="username"  data-icon="u" >账户名称 </label>
@@ -57,7 +76,7 @@
 								</p>
                                 <p class="keeplogin"> 
 									<input type="checkbox" name="loginkeeping" id="loginkeeping" value="loginkeeping" /> 
-									<label for="loginkeeping">保持登录状态</label>
+									<label for="loginkeeping">保持登录状态 </label>
 								</p>
                                 <p class="login button"> 
                                     <input type="submit" value="登&nbsp&nbsp陆" /> 
@@ -68,7 +87,7 @@
 								</p>
                             </form>
                         </div>
-
+                       
                         <div id="register" class="animate form">
                             <form  action="mysuperscript.php" autocomplete="on"> 
                                 <h1> Sign up </h1> 
