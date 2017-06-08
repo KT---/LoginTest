@@ -10,10 +10,10 @@
     //启用$_SESSION超级全局变量
     session_start();
     //定义变量标识符，防止inc、func文件恶意调用
-    define('Login_inc',true);
-    define('Login_func',true);
+    define('LT_req',true);
     
-   require dirname(__FILE__).'/function/login.func.php';
+   require dirname(__FILE__).'/function/login-register.func.php';
+
     // if(!($_SESSION['HTTP_REFERER'] == md5('index.php')))
     // {
     //     exit('非法登入！');
@@ -30,12 +30,17 @@
         {
              echo "<script language=javascript>alert('表单提交错误');history.back();</script>";
         }
-        if(!_check_email($_POST['username']))//检查用户名email地址格式合法性
-        {
-            echo "<script language=javascript>alert('非法用户名');history.back();</script>";
-        }
-    //     print_r($_POST);
+//         _check_email($_POST['username']); //检查用户名email地址格式合法性
+        _check_password($_POST['password'],6,30);
+        
+        print_r($_POST);
         echo '登陆成功';
+        
+    }
+    else if(isset($_GET['act']) && $_GET['act'] == 'register')
+    {
+        print_r($_POST);
+        echo '注册成功';
     }
 
 
@@ -75,7 +80,7 @@
                         <div id="login" class="animate form">
                             <form method="post" action="LoginZh-cn.php?act=login"  autocomplete="on" >
                                 <input type="hidden" name="IdentityCode" value=<?php echo $_SESSION['identitycode'];?>>
-                                <h1>登陆</h1> 
+                                <h1>登 陆</h1> 
                                 <p> 
                                     <label for="username"  data-icon="u" >账户名称 </label>
                                     <input id="username" name="username" required="required" type="text" placeholder="用户名或邮箱地址"/>
@@ -104,30 +109,35 @@
                         </div>
                        
                         <div id="register" class="animate form">
-                            <form  action="mysuperscript.php" autocomplete="on"> 
-                                <h1> Sign up </h1> 
+                            <form  method="post" action="LoginZh-cn.php?act=register" autocomplete="on"> 
+                                <h1>注 册</h1> 
                                 <p> 
-                                    <label for="usernamesignup" class="uname" data-icon="u">Your username</label>
-                                    <input id="usernamesignup" name="usernamesignup" required="required" type="text" placeholder="mysuperusername690" />
+                                    <label for="usernamesignup" class="uname" data-icon="u">用户名</label>
+                                    <input id="usernamesignup" name="usernamesignup" required="required" type="text" placeholder="4~20位字符" />
                                 </p>
                                 <p> 
-                                    <label for="emailsignup" class="youmail" data-icon="e" > Your email</label>
-                                    <input id="emailsignup" name="emailsignup" required="required" type="email" placeholder="mysupermail@mail.com"/> 
+                                    <label for="emailsignup" class="youmail" data-icon="e" >邮箱</label>
+                                    <input id="emailsignup" name="emailsignup" required="required" type="email" placeholder="注册电子邮件"/> 
                                 </p>
                                 <p> 
-                                    <label for="passwordsignup" class="youpasswd" data-icon="p">Your password </label>
-                                    <input id="passwordsignup" name="passwordsignup" required="required" type="password" placeholder="eg. X8df!90EO"/>
+                                    <label for="passwordsignup" class="youpasswd" data-icon="p">密码</label>
+                                    <input id="passwordsignup" name="passwordsignup" required="required" type="password" placeholder="6~30位数字及英文字母"/>
                                 </p>
                                 <p> 
-                                    <label for="passwordsignup_confirm" class="youpasswd" data-icon="p">Please confirm your password </label>
-                                    <input id="passwordsignup_confirm" name="passwordsignup_confirm" required="required" type="password" placeholder="eg. X8df!90EO"/>
+                                    <label for="passwordsignup_confirm" class="youpasswd" data-icon="p">确认密码</label>
+                                    <input id="passwordsignup_confirm" name="passwordsignup_confirm" required="required" type="password" placeholder="重复输入密码"/>
                                 </p>
+                                <p id="verifcode"> 
+									<label for="verifcode" >验证码 </label><br />
+                                    <input id="verifcode" name="verifcode" required="required" type="text" placeholder="4位验证码"/>
+								    <img src = "verifcode.php" id="codepng" onclick="javascript:this.src='verifcode.php?tm='+Math.random()"/>
+								</p>
                                 <p class="signin button"> 
-									<input type="submit" value="Sign up"/> 
+									<input type="submit" value="注 册"/> 
 								</p>
                                 <p class="change_link">  
-									Already a member ?
-									<a href="#tologin" class="to_register"> Go and log in </a>
+									已经有账号？
+									<a href="#tologin" class="to_register">去登陆</a>
 								</p>
                             </form>
                         </div>

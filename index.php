@@ -8,7 +8,7 @@
     //启用$_SESSION超级全局变量
     session_start();
     //定义变量标识符，防止inc、func文件恶意调用
-    define('Index_inc',true);
+    define('LT_req',true);
     //调用index.inc.php
     require dirname(__FILE__).'/include/index.inc.php';
 
