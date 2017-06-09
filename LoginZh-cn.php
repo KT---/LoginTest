@@ -18,24 +18,33 @@
     // { 
     //     exit('非法登入！');
     // }
-
     //表单提交本页后进行验证
     if(isset($_POST['IdentityCode']) && isset($_GET['act']) && $_GET['act'] == 'login')//判断$_GET['act']、$_POST['IdentityCode']是否被定义，决定是否进行表单内容审核验证
     {
-        $login_info = Array();
-        $_login_info['unique'] = _check_identityCode($_POST['IdentityCode'],$_SESSION['identitycode']);//验证表单唯一识别码
+        $_login_info = Array();
+        _check_identityCode($_POST['IdentityCode'],$_SESSION['identitycode']);//验证表单唯一识别码
         _check_verifcode(4,$_POST['verifcode'],$_SESSION['verifcode']);//检查验证码
-        $_login_info['username'] = $_POST['username']; //检查用户名email地址格式合法性
+        $_login_info['username'] = $_POST['username']; //不检查用户名email地址格式合法性
         $_login_info['password'] = _check_password($_POST['password'],6,30);//检查密码格式
         $_login_info['loginkeeping'] = isset($_POST['loginkeeping']);
         
-       print_r($_login_info);
-       echo date("Y-m-d H:i:s",time()+8*60*60);        
+        print_r($_login_info);
+        unset($_login_info);
+//        echo date("Y-m-d H:i:s",time()+8*60*60);        
     }
-    else if(isset($_GET['act']) && $_GET['act'] == 'register')
+    else if(isset($_POST['IdentityCode']) && isset($_GET['act']) && $_GET['act'] == 'register')
     {
-        print_r($_POST);
-        echo '注册成功';
+        $_register_info = Array();
+        _check_identityCode($_POST['IdentityCode'],$_SESSION['identitycode']);//验证表单唯一识别码
+        _check_verifcode(4,$_POST['verifcode'],$_SESSION['verifcode']);//检查验证码
+        $_register_info['usernamesignup'] = _check_username($_POST['usernamesignup']);
+        $_register_info['emailsignup'] = _check_email($_POST['emailsignup']); //检查用户名email地址格式合法性
+        $_register_info['$_timestamp'] = time()+8*60*60;
+        $_register_info['passwordsignup'] = _check_password($_POST['passwordsignup'],6,30,$_POST['passwordsignup_confirm']);//检查密码格式
+        $_register_info['timesignup'] = date("Y-m-d H:i:s",$_register_info['$_timestamp']);
+        $_register_info['uid'] = md5(md5($_register_info['$_timestamp']+19901117));
+        print_r($_register_info);
+//        echo '注册成功';
     }
 
 
@@ -104,7 +113,8 @@
                         </div>
                        
                         <div id="register" class="animate form">
-                            <form  method="post" action="LoginZh-cn.php?act=register" autocomplete="on"> 
+                            <form  method="post" action="LoginZh-cn.php?act=register" autocomplete="on">
+                            <input type="hidden" name="IdentityCode" value=<?php echo $_SESSION['identitycode'];?>> 
                                 <h1>注 册</h1> 
                                 <p> 
                                     <label for="usernamesignup" class="uname" data-icon="u">用户名</label>
