@@ -13,4 +13,11 @@ function _alert_back($_alert_info)
 //      echo $_info;
      exit();
 }
+
+function _jumplocation($_info,$_url)
+{
+    echo "<script language=javascript>alert('$_info');location.href='$_url';</script>";
+    //      echo $_info;
+    exit();
+}
 ?>

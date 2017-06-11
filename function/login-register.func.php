@@ -8,6 +8,7 @@
 if(!defined('LT_req')){exit('非法调用');}
 require dirname(__FILE__).'/common.func.php';
 
+
 /**
  * 
  * @name _check_email
@@ -118,6 +119,19 @@ function _check_username($_username,$_minlen = 4,$_maxlen = 20,$_illegalchar = a
         $i++;
     }
     return $_username;
+}
+
+function _check_phonenum($_phonenum,$_numlen = 0)
+{
+    if($_numlen != 0 && $_phonenum != $_numlen)
+    {
+        _alert_back('电话号码长度应为'.$_numlen.'位');
+    }
+    if(!preg_match('/^[0-9]+$/', $_phonenum))
+    {
+        _alert_back('电话号码应为纯数字');
+    }
+    return $_phonenum;
 }
 ?>
 

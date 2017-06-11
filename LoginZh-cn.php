@@ -13,7 +13,7 @@
     define('LT_req',true);
     
    require dirname(__FILE__).'/function/login-register.func.php';
-
+   require dirname(__FILE__).'/include/mysql.inc.php';
     // if(!($_SESSION['HTTP_REFERER'] == md5('index.php')))
     // { 
     //     exit('非法登入！');
@@ -28,6 +28,8 @@
         $_login_info['password'] = _check_password($_POST['password'],6,30);//检查密码格式
         $_login_info['loginkeeping'] = isset($_POST['loginkeeping']);
         
+        
+        echo '<br/><br/>';
         print_r($_login_info);
         unset($_login_info);
 //        echo date("Y-m-d H:i:s",time()+8*60*60);        
@@ -39,14 +41,35 @@
         _check_verifcode(4,$_POST['verifcode'],$_SESSION['verifcode']);//检查验证码
         $_register_info['usernamesignup'] = _check_username($_POST['usernamesignup']);
         $_register_info['emailsignup'] = _check_email($_POST['emailsignup']); //检查用户名email地址格式合法性
+        $_register_info['phonenumsignup'] = _check_phonenum($_POST['phonenumsignup']);
+        $_register_info['passwordsignup'] = sha1(md5(_check_password($_POST['passwordsignup'],6,30,$_POST['passwordsignup_confirm'])));//检查密码格式及加密
         $_register_info['$_timestamp'] = time()+8*60*60;
-        $_register_info['passwordsignup'] = _check_password($_POST['passwordsignup'],6,30,$_POST['passwordsignup_confirm']);//检查密码格式
         $_register_info['timesignup'] = date("Y-m-d H:i:s",$_register_info['$_timestamp']);
-        $_register_info['uid'] = md5(md5($_register_info['$_timestamp']+19901117));
-        print_r($_register_info);
-//        echo '注册成功';
+        $_register_info['uid'] = md5($_register_info['$_timestamp']+19901117);
+        
+        /***将用户注册信息写入数据库*******/
+        @mysql_query("INSERT INTO `user_info`(
+            `user_uid`, 
+            `user_phone`, 
+            `user_pwd`, 
+            `user_rts`, 
+            `user_rt`, 
+            `user_email`, 
+            `user_name`) 
+            VALUES (
+            '{$_register_info['uid']}',
+            '{$_register_info['phonenumsignup']}',
+            '{$_register_info['passwordsignup']}',
+            '{$_register_info['$_timestamp']}',
+            '{$_register_info['timesignup']}',
+            '{$_register_info['emailsignup']}',
+            '{$_register_info['usernamesignup']}')") or die('数据库执行错误:'.mysql_error());
+//        print_r($_register_info);
+        /******************************************************/
+        mysql_close();
+        
+        _jumplocation('注册成功','index.php');
     }
-
 
     $_SESSION['identitycode'] = md5(mt_rand());
 ?>
@@ -117,23 +140,27 @@
                             <input type="hidden" name="IdentityCode" value=<?php echo $_SESSION['identitycode'];?>> 
                                 <h1>注 册</h1> 
                                 <p> 
-                                    <label for="usernamesignup" class="uname" data-icon="u">用户名</label>
+                                    <label for="usernamesignup" class="uname" data-icon="U">用户名</label>
                                     <input id="usernamesignup" name="usernamesignup" required="required" type="text" placeholder="4~20位字符" />
                                 </p>
                                 <p> 
-                                    <label for="emailsignup" class="youmail" data-icon="e" >邮箱</label>
+                                    <label for="emailsignup" class="youmail" data-icon="E" >邮箱</label>
                                     <input id="emailsignup" name="emailsignup" required="required" type="email" placeholder="注册电子邮件"/> 
                                 </p>
                                 <p> 
-                                    <label for="passwordsignup" class="youpasswd" data-icon="p">密码</label>
+                                    <label for="phonenumsignup" class="phone" data-icon="T" >联系电话</label>
+                                    <input id="phonenumsignup" name="phonenumsignup" required="required" type="text" placeholder="注册电话号码"/> 
+                                </p>
+                                <p> 
+                                    <label for="passwordsignup" class="youpasswd" data-icon="P">密码</label>
                                     <input id="passwordsignup" name="passwordsignup" required="required" type="password" placeholder="6~30位数字及英文字母"/>
                                 </p>
                                 <p> 
-                                    <label for="passwordsignup_confirm" class="youpasswd" data-icon="p">确认密码</label>
+                                    <label for="passwordsignup_confirm" class="youpasswd" data-icon="CP">确认密码</label>
                                     <input id="passwordsignup_confirm" name="passwordsignup_confirm" required="required" type="password" placeholder="重复输入密码"/>
                                 </p>
                                 <p id="verifcode"> 
-									<label for="verifcode" >验证码 </label><br />
+									<label for="verifcode" data-icon="V">验证码 </label><br />
                                     <input id="verifcode" name="verifcode" required="required" type="text" placeholder="4位验证码"/>
 								    <img src = "verifcode.php" id="codepng" onclick="javascript:this.src='verifcode.php?tm='+Math.random()"/>
 								</p>
