@@ -28,9 +28,20 @@
         $_login_info['password'] = _check_password($_POST['password'],6,30);//检查密码格式
         $_login_info['loginkeeping'] = isset($_POST['loginkeeping']);
         
+        if(false != _check_email($_login_info['username']))
+        {
+            if(sha1(md5($_login_info['password'])) !=  mysql_fetch_assoc(@mysql_query("SELECT `user_pwd` FROM `user_info` WHERE `user_email` LIKE '{$_login_info['username']}'"))['user_pwd'])
+            {
+                echo sha1(md5($_login_info['password'])).'<br/>';
+                echo mysql_fetch_assoc(@mysql_query("SELECT `user_pwd` FROM `user_info` WHERE `user_email` LIKE '{$_login_info['username']}'"))['user_pwd'];
+            }
+        }
         
-        echo '<br/><br/>';
-        print_r($_login_info);
+        echo '登录成功'.'<br/>';
+        echo sha1(md5($_login_info['password'])).'<br/>';
+        echo mysql_fetch_assoc(@mysql_query("SELECT `user_pwd` FROM `user_info` WHERE `user_email` LIKE '{$_login_info['username']}'"))['user_pwd'];
+        
+//        print_r($_login_info);
         unset($_login_info);
 //        echo date("Y-m-d H:i:s",time()+8*60*60);        
     }
@@ -47,7 +58,22 @@
         $_register_info['timesignup'] = date("Y-m-d H:i:s",$_register_info['$_timestamp']);
         $_register_info['uid'] = md5($_register_info['$_timestamp']+19901117);
         
-        /***将用户注册信息写入数据库*******/
+        /****************************检查用户名、邮箱、电话号码是否被注册****************************************/
+        if(null != mysql_fetch_assoc(@mysql_query("SELECT `user_name` FROM `user_info` WHERE `user_name` LIKE '{$_register_info['usernamesignup']}'")))
+        {
+            _alert_back('用户名已被注册!');
+        }
+        if(null != mysql_fetch_assoc(@mysql_query("SELECT `user_email` FROM `user_info` WHERE `user_email` LIKE '{$_register_info['emailsignup']}'")))
+        {
+            _alert_back('邮箱已被注册!');
+        }
+        if(null != mysql_fetch_assoc(@mysql_query("SELECT `user_phone` FROM `user_info` WHERE `user_phone` LIKE '{$_register_info['phonenumsignup']}'")))
+        {
+            _alert_back('电话号码已被注册!');
+        }
+        /*******************************************************************************************************/
+        
+        /****************************将用户注册信息写入数据库***********************************************/
         @mysql_query("INSERT INTO `user_info`(
             `user_uid`, 
             `user_phone`, 
@@ -65,9 +91,9 @@
             '{$_register_info['emailsignup']}',
             '{$_register_info['usernamesignup']}')") or die('数据库执行错误:'.mysql_error());
 //        print_r($_register_info);
-        /******************************************************/
+        /**********************************************************************************************/
         mysql_close();
-        
+        unset($_register_info);
         _jumplocation('注册成功','index.php');
     }
 
