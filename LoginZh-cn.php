@@ -28,22 +28,34 @@
         $_login_info['password'] = _check_password($_POST['password'],6,30);//检查密码格式
         $_login_info['loginkeeping'] = isset($_POST['loginkeeping']);
         
-        if(false != _check_email($_login_info['username']))
+        /***********************************登陆验证****************************************/
+        if(false != _check_email($_login_info['username'],'return'))
         {
-            if(sha1(md5($_login_info['password'])) !=  mysql_fetch_assoc(@mysql_query("SELECT `user_pwd` FROM `user_info` WHERE `user_email` LIKE '{$_login_info['username']}'"))['user_pwd'])
-            {
-                echo sha1(md5($_login_info['password'])).'<br/>';
-                echo mysql_fetch_assoc(@mysql_query("SELECT `user_pwd` FROM `user_info` WHERE `user_email` LIKE '{$_login_info['username']}'"))['user_pwd'];
-            }
+            $_mysql_fetch = mysql_fetch_assoc(mysql_query("SELECT * FROM `user_info` WHERE `user_email` LIKE '{$_login_info['username']}'"));
         }
+        else 
+        {
+            $_mysql_fetch = mysql_fetch_assoc(mysql_query("SELECT * FROM `user_info` WHERE `user_name` LIKE '{$_login_info['username']}'"));
+        }
+        if($_mysql_fetch['user_pwd'] == NULL)
+        {
+           _alert_back('用户不存在！');
+        }
+        if(!(sha1(md5($_login_info['password'])) == $_mysql_fetch['user_pwd']))
+        {
+            _alert_back('密码错误!');
+        }  
+        /*********************************************************************************/
         
-        echo '登录成功'.'<br/>';
-        echo sha1(md5($_login_info['password'])).'<br/>';
-        echo mysql_fetch_assoc(@mysql_query("SELECT `user_pwd` FROM `user_info` WHERE `user_email` LIKE '{$_login_info['username']}'"))['user_pwd'];
-        
-//        print_r($_login_info);
+        mysql_close();
+        setcookie('LT_uid',$_mysql_fetch['user_uid'],time()+3600);
+        setcookie('LT_ts',base64_encode(time()));
+        setcookie('LT_ip',$_SERVER['REMOTE_ADDR']);
+        setcookie('LT_ic',$_POST['IdentityCode']);
         unset($_login_info);
-//        echo date("Y-m-d H:i:s",time()+8*60*60);        
+
+        _jumplocation('登陆成功','user-homepage.php');
+              
     }
     else if(isset($_POST['IdentityCode']) && isset($_GET['act']) && $_GET['act'] == 'register')
     {
@@ -94,7 +106,7 @@
         /**********************************************************************************************/
         mysql_close();
         unset($_register_info);
-        _jumplocation('注册成功','index.php');
+        _jumplocation('注册成功','user-homepage.php');
     }
 
     $_SESSION['identitycode'] = md5(mt_rand());
