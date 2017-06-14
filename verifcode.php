@@ -1,9 +1,10 @@
 <?php
 /* ===================================
-*	tytel		:
-*	version		:
+*	tytel		:verifcode.php
+*	version		:v1.0
 *	By			:KT
 *	Data		:2017年6月5日
+*   function    :生成一个验证码
 =======================================*/
 session_start();
 $codenum = null;

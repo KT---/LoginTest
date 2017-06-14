@@ -7,10 +7,10 @@
 =======================================*/
 if(!defined('LT_req')){exit('非法调用');}
 
-	define('DB_HOST','localhost');
-	define('DB_USER','root');
-	define('DB_PWD','tt147258369');
-	define('DB_NAME','logintest_db');
+	if(!defined('DB_HOST')){define('DB_HOST','localhost');}
+	if(!defined('DB_USER')){define('DB_USER','root');}
+	if(!defined('DB_PWD')){define('DB_PWD','tt147258369');}
+	if(!defined('DB_NAME')){define('DB_NAME','logintest_db');}
 	
 	$_mysqlconnet = @mysql_connect(DB_HOST,DB_USER,DB_PWD)or die('无法访问数据库');
 	

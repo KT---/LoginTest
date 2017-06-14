@@ -1,9 +1,12 @@
 <?php
 /* ===================================
-*	tytel		:
-*	version		:
+*	tytel		:LoginZh-cn.php
+*	version		:v1.0
 *	By			:KT
 *	Data		:2017年6月5日
+*   function    :登录注册主页面，登录及注册表单，验证
+*               注册及验证登录，写入数据库，设置登录
+*               cookie
 =======================================*/
 
 
@@ -12,111 +15,75 @@
     //定义变量标识符，防止inc、func文件恶意调用
     define('LT_req',true);
     
-   require dirname(__FILE__).'/function/login-register.func.php';
-   require dirname(__FILE__).'/include/mysql.inc.php';
-    // if(!($_SESSION['HTTP_REFERER'] == md5('index.php')))
-    // { 
-    //     exit('非法登入！');
-    // }
-    //表单提交本页后进行验证
+    require dirname(__FILE__).'/function/login-register.func.php';
+    
+
     if(isset($_POST['IdentityCode']) && isset($_GET['act']) && $_GET['act'] == 'login')//判断$_GET['act']、$_POST['IdentityCode']是否被定义，决定是否进行表单内容审核验证
     {
         $_login_info = Array();
+        /*******************检查验证码，检查密码格式正确性，并判断是否保持登录***********************/
         _check_identityCode($_POST['IdentityCode'],$_SESSION['identitycode']);//验证表单唯一识别码
         _check_verifcode(4,$_POST['verifcode'],$_SESSION['verifcode']);//检查验证码
         $_login_info['username'] = $_POST['username']; //不检查用户名email地址格式合法性
         $_login_info['password'] = _check_password($_POST['password'],6,30);//检查密码格式
         $_login_info['loginkeeping'] = isset($_POST['loginkeeping']);
-        
-        /***********************************登陆验证****************************************/
-        if(false != _check_email($_login_info['username'],'return'))
-        {
-            $_mysql_fetch = mysql_fetch_assoc(mysql_query("SELECT * FROM `user_info` WHERE `user_email` LIKE '{$_login_info['username']}'"));
-        }
-        else 
-        {
-            $_mysql_fetch = mysql_fetch_assoc(mysql_query("SELECT * FROM `user_info` WHERE `user_name` LIKE '{$_login_info['username']}'"));
-        }
-        if($_mysql_fetch['user_pwd'] == NULL)
-        {
-           _alert_back('用户不存在！');
-        }
-        if(!(sha1(md5($_login_info['password'])) == $_mysql_fetch['user_pwd']))
-        {
-            _alert_back('密码错误!');
-        }  
         /*********************************************************************************/
         
-        mysql_close();
-        setcookie('LT_uid',$_mysql_fetch['user_uid'],time()+3600);
-        setcookie('LT_ts',base64_encode(time()));
-        setcookie('LT_ip',$_SERVER['REMOTE_ADDR']);
-        setcookie('LT_ic',$_POST['IdentityCode']);
-        unset($_login_info);
+        /***********************************登陆验证****************************************/
+        $_mysql_fetch = _login_verify($_login_info);
+        /*********************************************************************************/
+        
+        mysql_close();//关闭数据库
+        setcookie('LT_uid',$_mysql_fetch['user_uid'],time()+30+(24*60*60*$_login_info['loginkeeping'])); //登录成功 设置cookie
+        unset($_login_info);//清楚缓存
 
-        _jumplocation('登陆成功','user-homepage.php');
+        _jumplocation('user-homepage.php');//跳转到主页
               
     }
     else if(isset($_POST['IdentityCode']) && isset($_GET['act']) && $_GET['act'] == 'register')
     {
         $_register_info = Array();
+        /*******************检查验证码，检查用户名、邮箱、电话号码、密码格式正确性，并写连同时间戳及页面唯一标识码入缓存***********************/
         _check_identityCode($_POST['IdentityCode'],$_SESSION['identitycode']);//验证表单唯一识别码
         _check_verifcode(4,$_POST['verifcode'],$_SESSION['verifcode']);//检查验证码
         $_register_info['usernamesignup'] = _check_username($_POST['usernamesignup']);
         $_register_info['emailsignup'] = _check_email($_POST['emailsignup']); //检查用户名email地址格式合法性
-        $_register_info['phonenumsignup'] = _check_phonenum($_POST['phonenumsignup']);
+        $_register_info['phonenumsignup'] = _check_phonenum($_POST['phonenumsignup'],11);
         $_register_info['passwordsignup'] = sha1(md5(_check_password($_POST['passwordsignup'],6,30,$_POST['passwordsignup_confirm'])));//检查密码格式及加密
         $_register_info['$_timestamp'] = time()+8*60*60;
         $_register_info['timesignup'] = date("Y-m-d H:i:s",$_register_info['$_timestamp']);
         $_register_info['uid'] = md5($_register_info['$_timestamp']+19901117);
+        /*******************************************************************************************************/
         
         /****************************检查用户名、邮箱、电话号码是否被注册****************************************/
-        if(null != mysql_fetch_assoc(@mysql_query("SELECT `user_name` FROM `user_info` WHERE `user_name` LIKE '{$_register_info['usernamesignup']}'")))
-        {
-            _alert_back('用户名已被注册!');
-        }
-        if(null != mysql_fetch_assoc(@mysql_query("SELECT `user_email` FROM `user_info` WHERE `user_email` LIKE '{$_register_info['emailsignup']}'")))
-        {
-            _alert_back('邮箱已被注册!');
-        }
-        if(null != mysql_fetch_assoc(@mysql_query("SELECT `user_phone` FROM `user_info` WHERE `user_phone` LIKE '{$_register_info['phonenumsignup']}'")))
-        {
-            _alert_back('电话号码已被注册!');
-        }
+        _check_mysql_repetition('user_name', 'user_info', 'user_name', $_register_info['usernamesignup'],'用户名已被注册!');
+        _check_mysql_repetition('user_email', 'user_info', 'user_email', $_register_info['emailsignup'],'邮箱已被注册!');
+        _check_mysql_repetition('user_phone', 'user_info', 'user_phone', $_register_info['phonenumsignup'],'电话号码已被注册!');
         /*******************************************************************************************************/
         
         /****************************将用户注册信息写入数据库***********************************************/
-        @mysql_query("INSERT INTO `user_info`(
-            `user_uid`, 
-            `user_phone`, 
-            `user_pwd`, 
-            `user_rts`, 
-            `user_rt`, 
-            `user_email`, 
-            `user_name`) 
-            VALUES (
-            '{$_register_info['uid']}',
-            '{$_register_info['phonenumsignup']}',
-            '{$_register_info['passwordsignup']}',
-            '{$_register_info['$_timestamp']}',
-            '{$_register_info['timesignup']}',
-            '{$_register_info['emailsignup']}',
-            '{$_register_info['usernamesignup']}')") or die('数据库执行错误:'.mysql_error());
-//        print_r($_register_info);
+        @mysql_query("INSERT INTO `user_info`(`user_uid`,`user_phone`,`user_pwd`,`user_rts`,`user_rt`,`user_email`,`user_name`) 
+              VALUES('{$_register_info['uid']}','{$_register_info['phonenumsignup']}','{$_register_info['passwordsignup']}',
+                     '{$_register_info['$_timestamp']}','{$_register_info['timesignup']}','{$_register_info['emailsignup']}',
+                     '{$_register_info['usernamesignup']}')") or die('数据库执行错误:'.mysql_error());
         /**********************************************************************************************/
-        mysql_close();
-        unset($_register_info);
-        _jumplocation('注册成功','user-homepage.php');
+        mysql_close();//关闭数据库
+        unset($_register_info);//清除缓存
+        _aler_jump('注册成功，请登录！！','LoginZh-cn.php');  //注册成功 跳转到主页
     }
 
-    $_SESSION['identitycode'] = md5(mt_rand());
+    $_SESSION['identitycode'] = md5(mt_rand());//生成页面唯一标识码
+    if(isset($_COOKIE['LT_uid']))//判断是否有验证登录cookie 如果有直接跳转主页
+    {
+          _jumplocation('user-homepage.php');   
+    }
 ?>
 <!DOCTYPE html>
-<html lang="en" class="no-js"> 
+<html lang="zh-cn" class="no-js"> 
     <head>
         <meta charset="UTF-8" />
         <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">  -->
-        <title>奶油猪客户管理系统</title>
+        <title>登录注册</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
         <meta name="description" content="Login and Registration Form with HTML5 and CSS3" />
         <meta name="keywords" content="html5, css3, form, switch, animation, :target, pseudo-class" />
@@ -128,6 +95,7 @@
     </head>
     <body>
         <div class="container">
+            <!-------------------------------  页头    -------------------------------->
             <header>
                 <h1>奶油猪<span>客户管理系统</span></h1>
 				<nav class="codrops-demos">
@@ -136,12 +104,14 @@
 					<a href="index3.html">English</a> -->
 				</nav>
             </header>
+            <!------------------------------------------------------------------------>
             <section>				
                 <div id="container_demo" >
                     <!-- hidden anchor to stop jump http://www.css3create.com/Astuce-Empecher-le-scroll-avec-l-utilisation-de-target#wrap4  -->
                     <a class="hiddenanchor" id="toregister"></a>
                     <a class="hiddenanchor" id="tologin"></a>
                     <div id="wrapper">
+                    <!-------------------------------  登陆页面    -------------------------------->
                         <div id="login" class="animate form">
                             <form method="post" action="LoginZh-cn.php?act=login"  autocomplete="on" >
                                 <input type="hidden" name="IdentityCode" value=<?php echo $_SESSION['identitycode'];?>>
@@ -172,7 +142,9 @@
 								</p>
                             </form>
                         </div>
-                       
+                        <!------------------------------------------------------------------------>
+                        
+                        <!-------------------------------  注册页面    -------------------------------->
                         <div id="register" class="animate form">
                             <form  method="post" action="LoginZh-cn.php?act=register" autocomplete="on">
                             <input type="hidden" name="IdentityCode" value=<?php echo $_SESSION['identitycode'];?>> 
@@ -211,7 +183,7 @@
 								</p>
                             </form>
                         </div>
-						
+						<!------------------------------------------------------------------------>
                     </div>
                 </div>  
             </section>
