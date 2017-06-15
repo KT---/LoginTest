@@ -33,7 +33,8 @@
         /*********************************************************************************/
         
         mysql_close();//关闭数据库
-        setcookie('LT_uid',$_mysql_fetch['user_uid'],time()+30+(24*60*60*$_login_info['loginkeeping'])); //登录成功 设置cookie
+//         setcookie('LT_uid',$_mysql_fetch['user_uid'],time()+30+(24*60*60*$_login_info['loginkeeping'])); //登录成功 设置cookie
+        setcookie('LT_uid',$_mysql_fetch['user_uid'],(time()+24*60*60)*$_login_info['loginkeeping']); //登录成功 设置cookie
         unset($_login_info);//清楚缓存
 
         _jumplocation('user-home.php');//跳转到主页

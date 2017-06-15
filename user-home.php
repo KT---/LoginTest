@@ -90,41 +90,58 @@
       </div>
     </div>
   </div>
-  <div class="right-product my-index right-full">
+  <div class="right-product my-index right-full"">
      <div class="container-fluid">
 	   <div class="info-center">
        
        <!---标题及时间----->
             <div class="info-title">
               <div class="pull-left">
-                <h4 style =font-size:35px;><strong><?php echo $_mysql_fetch['user_name'];?></strong></h4>
-                <p style = font-size:22px;>欢迎登录管理系统！</p>
+                <h4 style ="font-size:35px;"><strong><?php echo $_mysql_fetch['user_name'];?></strong></h4>
+                <p style = "font-size:22px;">欢迎登录管理系统！</p>
               </div>
               <div class="clearfix"></div>
             </div>
 
                
                <!-------------------------------------------消息列表----------------------------------------------------------->
-               <div class="row newslist" style="margin:50px 0 0 20px ;width:2500px;">
+               <div class="row newslist" style="margin:30px 0 0 50px ;width:1500px;">
                  <div class="col-md-8">
                    <div class="panel panel-default">  
                       <?php
-                        if(isset($_GET['act']) && $_GET['act']=='all'){$_i = mysql_fetch_assoc(mysql_query("select max(user_id) from user_info"))['max(user_id)'];}
-                        else{$_i = 5;} 
-                        for(; $_i>0 ; $_i--){?>
-                      <div class="panel-body">
-                           <div class="w15 pull-left"><?php echo $_i;?></div>
-                           <div class="w55 pull-left">系统需要升级</div>
-                           <div class="w20 pull-left text-center">2016年8月23日</div>
-                          <div class="w10 pull-left text-center"><span class="text-green-main">处理中</span></div>
-                      </div>
-                      <?php }?>
-                      <div class="panel-body text-center">
-                      <?php if(!isset($_GET['act'])){?>
-                          <a href="user-home.php?act=all" style="color:#5297d6;">展开所有记录</a>
-                      <?php }else{?>
-                          <a href="user-home.php" style="color:#5297d6;">收起所有记录</a>
-                      <?php }?>
+                        echo "<div class=\"panel-body\">";
+                        echo "<div class=\"w10 pull-left\"><strong>编号</strong></div>";
+                        echo "<div class=\"w15 pull-left\"><strong>用户名</strong></div>";
+                        echo "<div class=\"w25 pull-left text-center\"><strong>邮箱</strong></div>";
+                        echo "<div class=\"w25 pull-left text-center\"><strong>电话号码</strong></div>";
+                        echo "<div class=\"w20 pull-left text-center\"><strong>注册时间</strong></div></div>";
+                        if(isset($_GET['act']) && $_GET['act']=='all')
+                        {
+                            $_i = mysql_fetch_assoc(mysql_query("select max(user_id) from user_info"))['max(user_id)'];
+                        }
+                        else
+                        {
+                            $_i = 5;
+                        } 
+                        for($_j=1;$_j<=$_i;$_j++)
+                        {
+                            $_mysql_fetch = mysql_fetch_assoc(mysql_query("SELECT * FROM `user_info` WHERE `user_id` LIKE $_j"));
+                            if($_mysql_fetch['user_name']==null){continue;}
+                            echo "<div class=\"panel-body\">";
+                            echo "<div class=\"w10 pull-left\">$_j</div>";
+                            echo "<div class=\"w15 pull-left\">{$_mysql_fetch['user_name']}</div>";
+                            echo "<div class=\"w25 pull-left text-center\">{$_mysql_fetch['user_email']}</div>";
+                            echo "<div class=\"w25 pull-left text-center\">{$_mysql_fetch['user_phone']}</div>";
+                            echo "<div class=\"w20 pull-left text-center\">{$_mysql_fetch['user_rt']}</div></div>";
+                        }
+                        echo "<div class=\"panel-body text-center\">";
+                        if(!isset($_GET['act']))
+                        {
+                           echo "<a href=\"user-home.php?act=all\" style=\"color:#5297d6;\">展开所有记录</a>";
+                        }else{
+                           echo "<a href=\"user-home.php\" style=\"color:#5297d6;\">收起所有记录</a>";
+                        }
+                      ?>
                       </div>
                     </div>
                  </div>
