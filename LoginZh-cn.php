@@ -9,7 +9,6 @@
 *               cookie
 =======================================*/
 
-
     //启用$_SESSION超级全局变量
     session_start();
     //定义变量标识符，防止inc、func文件恶意调用
@@ -37,7 +36,7 @@
         setcookie('LT_uid',$_mysql_fetch['user_uid'],time()+30+(24*60*60*$_login_info['loginkeeping'])); //登录成功 设置cookie
         unset($_login_info);//清楚缓存
 
-        _jumplocation('user-homepage.php');//跳转到主页
+        _jumplocation('user-home.php');//跳转到主页
               
     }
     else if(isset($_POST['IdentityCode']) && isset($_GET['act']) && $_GET['act'] == 'register')
@@ -75,7 +74,7 @@
     $_SESSION['identitycode'] = md5(mt_rand());//生成页面唯一标识码
     if(isset($_COOKIE['LT_uid']))//判断是否有验证登录cookie 如果有直接跳转主页
     {
-          _jumplocation('user-homepage.php');   
+          _jumplocation('user-home.php');   
     }
 ?>
 <!DOCTYPE html>
@@ -89,8 +88,8 @@
         <meta name="keywords" content="html5, css3, form, switch, animation, :target, pseudo-class" />
         <meta name="author" content="Codrops" />
         <link rel="shortcut icon" href="icon/pooh.ico">  
-        <link rel="stylesheet" type="text/css" href="css/demo.css" />
-        <link rel="stylesheet" type="text/css" href="css/style.css" />
+        <link rel="stylesheet" type="text/css" href="css/LT_demo.css" />
+        <link rel="stylesheet" type="text/css" href="css/LT_style.css" />
 		<link rel="stylesheet" type="text/css" href="css/animate-custom.css" />
     </head>
     <body>
