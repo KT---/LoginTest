@@ -28,7 +28,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no"/>
-<title>用户主页</title>
+<title>个人中心</title>
 
 <link href="bootstrap-3.3.5-dist/css/bootstrap.min.css" title="" rel="stylesheet" />
 <link title="" href="css/style.css" rel="stylesheet" type="text/css"  />
@@ -50,7 +50,7 @@
     <a class="navbar-brand mystyle-brand"><span class="glyphicon glyphicon-home"></span></a></div>
   <div class="collapse navbar-collapse">
     <ul class="nav navbar-nav">
-      <li class="li-border"><a class="mystyle-color" href="user-home.php"> 奶油猪登陆管理系统</a></li>
+      <li class="li-border"><a class="mystyle-color" href="#"> 奶油猪登陆管理系统</a></li>
         <div class="time-title pull-right">
           <div class="year-month pull-right">
             <p><span><?php echo date('Y',time()); ?></span><?php echo '年'.date('m',time()).'月'.date('d',time()).'日';?></p>
@@ -70,9 +70,9 @@
     <div class="subNavBox">
       <div class="sBox">
         <ul class="navContent" style="display:block">
-          <li>
+          <li class="active">
             <div class="showtitle" style="width:100px;"><img src="images/leftimg.png" />个人中心</div>
-            <a href="user_personal.php"><span class="sublist-icon glyphicon glyphicon-user"></span><span class="sub-title">个人中心</span></a> 
+            <a href="#"><span class="sublist-icon glyphicon glyphicon-user"></span><span class="sub-title">个人中心</span></a> 
           </li>
           <li>
             <div class="showtitle" style="width:100px;"><img src="images/leftimg.png" />消费记录</div>
@@ -105,46 +105,20 @@
 
                
                <!-------------------------------------------信息主体页面----------------------------------------------------------->
-<!--               <div class="row newslist" style="margin:30px 0 0 50px ;width:1500px;">
-<!--                  <div class="col-md-8"> -->
-<!--                    <div class="panel panel-default">   -->
-                      <?php
-//                         echo "<div class=\"panel-body\">";
-//                         echo "<div class=\"w10 pull-left\"><strong>编号</strong></div>";
-//                         echo "<div class=\"w15 pull-left\"><strong>用户名</strong></div>";
-//                         echo "<div class=\"w25 pull-left text-center\"><strong>邮箱</strong></div>";
-//                         echo "<div class=\"w25 pull-left text-center\"><strong>电话号码</strong></div>";
-//                         echo "<div class=\"w20 pull-left text-center\"><strong>注册时间</strong></div></div>";
-//                         if(isset($_GET['act']) && $_GET['act']=='all')
-//                         {
-//                             $_i = mysql_fetch_assoc(mysql_query("select max(user_id) from user_info"))['max(user_id)'];
-//                         }
-//                         else
-//                         {
-//                             $_i = 5;
-//                         } 
-//                         for($_j=1;$_j<=$_i;$_j++)
-//                         {
-//                             $_mysql_fetch = mysql_fetch_assoc(mysql_query("SELECT * FROM `user_info` WHERE `user_id` LIKE $_j"));
-//                             if($_mysql_fetch['user_name']==null){continue;}
-//                             echo "<div class=\"panel-body\">";
-//                             echo "<div class=\"w10 pull-left\">$_j</div>";
-//                             echo "<div class=\"w15 pull-left\">{$_mysql_fetch['user_name']}</div>";
-//                             echo "<div class=\"w25 pull-left text-center\">{$_mysql_fetch['user_email']}</div>";
-//                             echo "<div class=\"w25 pull-left text-center\">{$_mysql_fetch['user_phone']}</div>";
-//                             echo "<div class=\"w20 pull-left text-center\">{$_mysql_fetch['user_rt']}</div></div>";
-//                         }
-//                         echo "<div class=\"panel-body text-center\">";
-//                         if(!isset($_GET['act']))
-//                         {
-//                            echo "<a href=\"user-home.php?act=all\" style=\"color:#5297d6;\">展开所有记录</a>";
-//                         }else{
-//                            echo "<a href=\"user-home.php\" style=\"color:#5297d6;\">收起所有记录</a>";
-//                         }
-//                       ?>
-<!--                       </div> -->
-<!--                     </div> -->
-<!--                  </div> -->
+              <div class="row newslist" style="margin:30px 0 0 50px ;width:1500px;">
+                 <div class="col-md-8">
+                    <div class="panel panel-default">
+                       <div class="panel-body">
+                          <div style = "width:800px;font-size:25px;float:left;margin-top:10px;"><strong>用户信息</strong></div>
+                          <div style = "border: solid 1px #000000;width:800px;font-size:15px;float:left;margin-top:10px;"><strong>编号</strong></div>
+                          <div style = "border: solid 1px #000000;width:800px;font-size:15px;float:left;margin-top:10px;"><strong>用户名</strong></div>
+                          <div style = "border: solid 1px #000000;width:800px;font-size:15px;float:left;margin-top:10px;"><strong>邮箱</strong></div>
+                          <div style = "border: solid 1px #000000;width:800px;font-size:15px;float:left;margin-top:10px;"><strong>电话号码</strong></div>
+                          <div style = "border: solid 1px #000000;width:800px;font-size:15px;float:left;margin-top:10px;"><strong>注册时间</strong></div></div>
+                          <button style="margin:50px 0 20px 50px;"><a href="#">重置密码</a></button>
+                      </div>
+                    </div>
+                 </div>
                  <!------------------------------------------------------------------------------------------------------------------->
                </div>
             </div>

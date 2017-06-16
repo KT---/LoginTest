@@ -12,8 +12,8 @@
     //定义变量标识符，防止inc、func文件恶意调用
     define('LT_req',true);
     
-    require dirname(__FILE__).'/function/login-register.func.php';
-    require dirname(__FILE__).'/include/mysql.inc.php';
+    require dirname(__FILE__).'./../function/login-register.func.php';
+    require dirname(__FILE__).'./../include/mysql.inc.php';
     
     if(!isset($_COOKIE['LT_uid']))
     {
@@ -21,7 +21,10 @@
     }
     
     $_mysql_fetch = mysql_fetch_assoc(mysql_query("SELECT * FROM `user_info` WHERE `user_uid` LIKE '{$_COOKIE['LT_uid']}'"));
-    
+    if($_mysql_fetch['user_jurisdiction'] == 'user')
+    {
+        echo "<script language=javascript>location.href='../index.php';</script>";
+    }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -30,13 +33,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no"/>
 <title>用户主页</title>
 
-<link href="bootstrap-3.3.5-dist/css/bootstrap.min.css" title="" rel="stylesheet" />
-<link title="" href="css/style.css" rel="stylesheet" type="text/css"  />
-<link title="blue" href="css/dermadefault.css" rel="stylesheet" type="text/css"/>
-<link href="css/templatecss.css" rel="stylesheet" title="" type="text/css" />
+<link href="../bootstrap-3.3.5-dist/css/bootstrap.min.css" title="" rel="stylesheet" />
+<link title="" href="../css/style.css" rel="stylesheet" type="text/css"  />
+<link title="blue" href="../css/dermadefault.css" rel="stylesheet" type="text/css"/>
+<link href="../css/templatecss.css" rel="stylesheet" title="" type="text/css" />
 <!-- <script src="script/jquery-1.11.1.min.js" type="text/javascript"></script> -->
 <!-- <script src="script/jquery.cookie.js" type="text/javascript"></script> -->
-<script src="bootstrap-3.3.5-dist/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="../bootstrap-3.3.5-dist/js/bootstrap.min.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -59,7 +62,7 @@
     </ul>
     
     <ul class="nav navbar-nav pull-right">
-       <li class="dropdown li-border"><a href="#" class="dropdown-toggle mystyle-color" ><?php echo '邮箱：'.$_mysql_fetch['user_email'];?></a></li>
+       <li class="dropdown li-border"><a href="#" class="dropdown-toggle mystyle-color" ><?php echo '管理员：'.$_mysql_fetch['user_name'];?></a></li>
             <li class="li-border dropdown"><a href="javascript:setCookie('LT_uid','0')" class="mystyle-color" > 登出</a></li>
     </ul>
   </div>
@@ -71,20 +74,20 @@
       <div class="sBox">
         <ul class="navContent" style="display:block">
           <li>
-            <div class="showtitle" style="width:100px;"><img src="images/leftimg.png" />个人中心</div>
-            <a href="user_personal.php"><span class="sublist-icon glyphicon glyphicon-user"></span><span class="sub-title">个人中心</span></a> 
+            <div class="showtitle" style="width:100px;"><img src="../images/leftimg.png" />用户管理</div>
+            <a href="user_personal.php"><span class="sublist-icon glyphicon glyphicon-user"></span><span class="sub-title">用户管理</span></a> 
           </li>
           <li>
-            <div class="showtitle" style="width:100px;"><img src="images/leftimg.png" />消费记录</div>
-            <a href="#"><span class="sublist-icon glyphicon glyphicon-credit-card"></span><span class="sub-title">消费记录</span></a> 
+            <div class="showtitle" style="width:100px;"><img src="../images/leftimg.png" />交易记录</div>
+            <a href="#"><span class="sublist-icon glyphicon glyphicon-credit-card"></span><span class="sub-title">交易记录</span></a> 
           </li>
           <li>
-            <div class="showtitle" style="width:100px;"><img src="images/leftimg.png" />车辆管理</div>
+            <div class="showtitle" style="width:100px;"><img src="../images/leftimg.png" />车辆管理</div>
             <a href="#"><span class="sublist-icon glyphicon glyphicon-road"></span><span class="sub-title">车辆管理</span></a>
           </li>
           <li>
-            <div class="showtitle" style="width:100px;"><img src="images/leftimg.png" />联系客服</div>
-            <a href="#"><span class="sublist-icon glyphicon glyphicon-comment"></span><span class="sub-title">联系客服</span></a>
+            <div class="showtitle" style="width:100px;"><img src="../images/leftimg.png" />客服问题处理</div>
+            <a href="#"><span class="sublist-icon glyphicon glyphicon-comment"></span><span class="sub-title">客服问题处理</span></a>
           </li>
         </ul>
       </div>
