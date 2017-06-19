@@ -12,8 +12,8 @@
     //定义变量标识符，防止inc、func文件恶意调用
     define('LT_req',true);
     
-    require dirname(__FILE__).'./../function/login-register.func.php';
-    require dirname(__FILE__).'./../include/mysql.inc.php';
+    require dirname(dirname(__FILE__)).'/function/login-register.func.php';
+    require dirname(dirname(__FILE__)).'/include/mysql.inc.php';
     
     if(!isset($_COOKIE['LT_uid']))
     {
@@ -21,10 +21,11 @@
     }
     
     $_mysql_fetch = mysql_fetch_assoc(mysql_query("SELECT * FROM `user_info` WHERE `user_uid` LIKE '{$_COOKIE['LT_uid']}'"));
-    if($_mysql_fetch['user_jurisdiction'] == 'user')
+    if($_mysql_fetch['user_jurisdiction'] != 'user')
     {
-        echo "<script language=javascript>location.href='../index.php';</script>";
+        echo "<script language=javascript>location.href='../adminpage/admin-home.php';</script>";
     }
+    
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -62,8 +63,8 @@
     </ul>
     
     <ul class="nav navbar-nav pull-right">
-       <li class="dropdown li-border"><a href="#" class="dropdown-toggle mystyle-color" ><?php echo '管理员：'.$_mysql_fetch['user_name'];?></a></li>
-            <li class="li-border dropdown"><a href="javascript:setCookie('LT_uid','0')" class="mystyle-color" > 登出</a></li>
+       <li class="dropdown li-border"><a href="#" class="dropdown-toggle mystyle-color" ><?php echo '邮箱：'.$_mysql_fetch['user_email'];?></a></li>
+            <li class="li-border dropdown"><a href="javascript:setCookie('LT_uid',0)" class="mystyle-color" > 登出</a></li>
     </ul>
   </div>
 </div>
@@ -73,27 +74,21 @@
     <div class="subNavBox">
       <div class="sBox">
         <ul class="navContent" style="display:block">
-        <?php if($_mysql_fetch['user_jurisdiction'] == 'root'){?>
           <li>
-            <div class="showtitle" style="width:100px;"><img src="../images/leftimg.png" />平台管理员</div>
-            <a href="user_personal.php"><span class="sublist-icon glyphicon glyphicon-star"></span><span class="sub-title">平台管理员</span></a> 
-          </li>
-        <?php } ?>
-          <li>
-            <div class="showtitle" style="width:100px;"><img src="../images/leftimg.png" />用户管理</div>
-            <a href="user_personal.php"><span class="sublist-icon glyphicon glyphicon-user"></span><span class="sub-title">用户管理</span></a> 
+            <div class="showtitle" style="width:100px;"><img src="../images/leftimg.png" />个人中心</div>
+            <a href="#"><span class="sublist-icon glyphicon glyphicon-user"></span><span class="sub-title">个人中心</span></a> 
           </li>
           <li>
-            <div class="showtitle" style="width:100px;"><img src="../images/leftimg.png" />交易记录</div>
-            <a href="#"><span class="sublist-icon glyphicon glyphicon-usd"></span><span class="sub-title">交易记录</span></a> 
+            <div class="showtitle" style="width:100px;"><img src="../images/leftimg.png" />消费记录</div>
+            <a href="#"><span class="sublist-icon glyphicon glyphicon-credit-card"></span><span class="sub-title">消费记录</span></a> 
           </li>
           <li>
             <div class="showtitle" style="width:100px;"><img src="../images/leftimg.png" />车辆管理</div>
             <a href="#"><span class="sublist-icon glyphicon glyphicon-road"></span><span class="sub-title">车辆管理</span></a>
           </li>
           <li>
-            <div class="showtitle" style="width:100px;"><img src="../images/leftimg.png" />客服问题处理</div>
-            <a href="#"><span class="sublist-icon glyphicon glyphicon-comment"></span><span class="sub-title">客服问题处理</span></a>
+            <div class="showtitle" style="width:100px;"><img src="../images/leftimg.png" />联系客服</div>
+            <a href="#"><span class="sublist-icon glyphicon glyphicon-comment"></span><span class="sub-title">联系客服</span></a>
           </li>
         </ul>
       </div>

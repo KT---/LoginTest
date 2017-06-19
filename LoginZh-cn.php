@@ -37,7 +37,7 @@
         setcookie('LT_uid',$_mysql_fetch['user_uid'],(time()+24*60*60)*$_login_info['loginkeeping']); //登录成功 设置cookie
         unset($_login_info);//清楚缓存
 
-        _jumplocation('user-home.php');//跳转到主页
+        _jumplocation('./userpage/user-home.php');//跳转到主页
               
     }
     else if(isset($_POST['IdentityCode']) && isset($_GET['act']) && $_GET['act'] == 'register')
@@ -75,7 +75,7 @@
     $_SESSION['identitycode'] = md5(mt_rand());//生成页面唯一标识码
     if(isset($_COOKIE['LT_uid']))//判断是否有验证登录cookie 如果有直接跳转主页
     {
-          _jumplocation('user-home.php');   
+          _jumplocation('./userpage/user-home.php');   
     }
 ?>
 <!DOCTYPE html>
