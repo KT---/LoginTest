@@ -110,7 +110,42 @@
 
                
                <!-------------------------------------------信息主体页面----------------------------------------------------------->
-
+               <div class="row newslist" style="margin:30px 0 0 50px ;width:2000px;">
+                  <div class="col-md-8">
+                    <div class="panel panel-default"> 
+                         <div class="panel-body">
+                         <div class="w5 pull-left text-center"><strong>序号</strong></div>
+                         <div class="w10 pull-left text-center"><strong>管理员编号</strong></div>
+                         <div class="w15 pull-left text-center"><strong>管理员名称</strong></div>
+                         <div class="w20 pull-left text-center"><strong>邮箱</strong></div>
+                         <div class="w20 pull-left text-center"><strong>电话号码</strong></div>
+                         <div class="w20 pull-left text-center"><strong>添加时间</strong></div>
+                         <div class="w10 pull-left text-center"><strong>操作</strong></div></div>
+                      <?php   
+                        $_i = mysql_fetch_assoc(mysql_query("select max(user_id) from user_info"))['max(user_id)'];
+                        $num = 1;
+                        for($_j=1;$_j<=$_i;$_j++)
+                        {
+                            $_mysql_fetch = mysql_fetch_assoc(mysql_query("SELECT * FROM `user_info` WHERE `user_id` LIKE $_j"));
+                            if(($_mysql_fetch['user_jurisdiction']!='admin') && ($_mysql_fetch['user_jurisdiction']!='root')){continue;}
+                      ?>
+                            <div class="panel-body">
+                                <div class="w5 pull-left text-center"><?php echo $num++; ?></div>
+                                <div class="w10 pull-left text-center"><?php echo $_mysql_fetch['user_id']; ?></div>
+                                <div class="w15 pull-left text-center"><?php echo $_mysql_fetch['user_name']; ?></div>
+                                <div class="w20 pull-left text-center"><?php echo $_mysql_fetch['user_email']; ?></div>
+                                <div class="w20 pull-left text-center"><?php echo $_mysql_fetch['user_phone']; ?></div>
+                                <div class="w20 pull-left text-center"><?php echo $_mysql_fetch['user_rt']; ?></div>
+                                <div class="text-center\">
+                                    <a href="admin-manage.php?act=edit&value=<?php echo $_mysql_fetch['user_uid']; ?>"><button>编辑</button></a>
+                                    <a href="admin-manage.php?act=delete&value=<?php echo $_mysql_fetch['user_uid']; ?>"><button>删除</button></a>
+                                </div>
+                            </div>
+                       <?php } ?>
+                       
+                    </div>
+                  </div>
+               </div>
                  <!------------------------------------------------------------------------------------------------------------------->
                </div>
             </div>
@@ -118,3 +153,4 @@
 	 </div>
 </body>
 </html>
+

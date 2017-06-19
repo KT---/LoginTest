@@ -30,7 +30,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" type="text/javascript" />
 <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no"/>
 <title>用户主页</title>
 
@@ -41,6 +41,7 @@
 <!-- <script src="script/jquery-1.11.1.min.js" type="text/javascript"></script> -->
 <!-- <script src="script/jquery.cookie.js" type="text/javascript"></script> -->
 <script src="../bootstrap-3.3.5-dist/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="../JS/common.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -64,7 +65,7 @@
     
     <ul class="nav navbar-nav pull-right">
        <li class="dropdown li-border"><a href="#" class="dropdown-toggle mystyle-color" ><?php echo '邮箱：'.$_mysql_fetch['user_email'];?></a></li>
-            <li class="li-border dropdown"><a href="javascript:setCookie('LT_uid',0)" class="mystyle-color" > 登出</a></li>
+            <li class="li-border dropdown"><a href="javascript:resetCookie('LT_uid','0','/LoginTest')" class="mystyle-color" > 登出</a></li>
     </ul>
   </div>
 </div>
@@ -109,46 +110,7 @@
 
                
                <!-------------------------------------------信息主体页面----------------------------------------------------------->
-<!--               <div class="row newslist" style="margin:30px 0 0 50px ;width:1500px;">
-<!--                  <div class="col-md-8"> -->
-<!--                    <div class="panel panel-default">   -->
-                      <?php
-//                         echo "<div class=\"panel-body\">";
-//                         echo "<div class=\"w10 pull-left\"><strong>编号</strong></div>";
-//                         echo "<div class=\"w15 pull-left\"><strong>用户名</strong></div>";
-//                         echo "<div class=\"w25 pull-left text-center\"><strong>邮箱</strong></div>";
-//                         echo "<div class=\"w25 pull-left text-center\"><strong>电话号码</strong></div>";
-//                         echo "<div class=\"w20 pull-left text-center\"><strong>注册时间</strong></div></div>";
-//                         if(isset($_GET['act']) && $_GET['act']=='all')
-//                         {
-//                             $_i = mysql_fetch_assoc(mysql_query("select max(user_id) from user_info"))['max(user_id)'];
-//                         }
-//                         else
-//                         {
-//                             $_i = 5;
-//                         } 
-//                         for($_j=1;$_j<=$_i;$_j++)
-//                         {
-//                             $_mysql_fetch = mysql_fetch_assoc(mysql_query("SELECT * FROM `user_info` WHERE `user_id` LIKE $_j"));
-//                             if($_mysql_fetch['user_name']==null){continue;}
-//                             echo "<div class=\"panel-body\">";
-//                             echo "<div class=\"w10 pull-left\">$_j</div>";
-//                             echo "<div class=\"w15 pull-left\">{$_mysql_fetch['user_name']}</div>";
-//                             echo "<div class=\"w25 pull-left text-center\">{$_mysql_fetch['user_email']}</div>";
-//                             echo "<div class=\"w25 pull-left text-center\">{$_mysql_fetch['user_phone']}</div>";
-//                             echo "<div class=\"w20 pull-left text-center\">{$_mysql_fetch['user_rt']}</div></div>";
-//                         }
-//                         echo "<div class=\"panel-body text-center\">";
-//                         if(!isset($_GET['act']))
-//                         {
-//                            echo "<a href=\"user-home.php?act=all\" style=\"color:#5297d6;\">展开所有记录</a>";
-//                         }else{
-//                            echo "<a href=\"user-home.php\" style=\"color:#5297d6;\">收起所有记录</a>";
-//                         }
-//                       ?>
-<!--                       </div> -->
-<!--                     </div> -->
-<!--                  </div> -->
+
                  <!------------------------------------------------------------------------------------------------------------------->
                </div>
             </div>
@@ -157,13 +119,3 @@
 </body>
 </html>
 
-<script type="text/javascript">
-function setCookie(name,value) 
-{ 
-    var Days = 30; 
-    var exp = new Date(); 
-    exp.setTime(exp.getTime()); 
-    document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
-    location.href = "../index.php";
-} 
-</script>

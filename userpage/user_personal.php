@@ -28,15 +28,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no"/>
+<script src="../JS/common.js" type="text/javascript"></script>
 <title>个人中心</title>
 
-<link href="bootstrap-3.3.5-dist/css/bootstrap.min.css" title="" rel="stylesheet" />
-<link title="" href="css/style.css" rel="stylesheet" type="text/css"  />
-<link title="blue" href="css/dermadefault.css" rel="stylesheet" type="text/css"/>
-<link href="css/templatecss.css" rel="stylesheet" title="" type="text/css" />
+<link href="../bootstrap-3.3.5-dist/css/bootstrap.min.css" title="" rel="stylesheet" />
+<link title="" href="../css/style.css" rel="stylesheet" type="text/css"  />
+<link title="blue" href="../css/dermadefault.css" rel="stylesheet" type="text/css"/>
+<link href="../css/templatecss.css" rel="stylesheet" title="" type="text/css" />
 <!-- <script src="script/jquery-1.11.1.min.js" type="text/javascript"></script> -->
 <!-- <script src="script/jquery.cookie.js" type="text/javascript"></script> -->
-<script src="bootstrap-3.3.5-dist/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="../bootstrap-3.3.5-dist/js/bootstrap.min.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -60,7 +61,7 @@
     
     <ul class="nav navbar-nav pull-right">
        <li class="dropdown li-border"><a href="#" class="dropdown-toggle mystyle-color" ><?php echo '邮箱：'.$_mysql_fetch['user_email'];?></a></li>
-            <li class="li-border dropdown"><a href="javascript:setCookie('LT_uid','0')" class="mystyle-color" > 登出</a></li>
+            <li class="li-border dropdown"><a href="javascript:resetCookie('LT_uid','0','/LoginTest')" class="mystyle-color" > 登出</a></li>
     </ul>
   </div>
 </div>
@@ -71,19 +72,19 @@
       <div class="sBox">
         <ul class="navContent" style="display:block">
           <li class="active">
-            <div class="showtitle" style="width:100px;"><img src="images/leftimg.png" />个人中心</div>
+            <div class="showtitle" style="width:100px;"><img src="../images/leftimg.png" />个人中心</div>
             <a href="#"><span class="sublist-icon glyphicon glyphicon-user"></span><span class="sub-title">个人中心</span></a> 
           </li>
           <li>
-            <div class="showtitle" style="width:100px;"><img src="images/leftimg.png" />消费记录</div>
+            <div class="showtitle" style="width:100px;"><img src="../images/leftimg.png" />消费记录</div>
             <a href="#"><span class="sublist-icon glyphicon glyphicon-credit-card"></span><span class="sub-title">消费记录</span></a> 
           </li>
           <li>
-            <div class="showtitle" style="width:100px;"><img src="images/leftimg.png" />车辆管理</div>
+            <div class="showtitle" style="width:100px;"><img src="../images/leftimg.png" />车辆管理</div>
             <a href="#"><span class="sublist-icon glyphicon glyphicon-road"></span><span class="sub-title">车辆管理</span></a>
           </li>
           <li>
-            <div class="showtitle" style="width:100px;"><img src="images/leftimg.png" />联系客服</div>
+            <div class="showtitle" style="width:100px;"><img src="../images/leftimg.png" />联系客服</div>
             <a href="#"><span class="sublist-icon glyphicon glyphicon-comment"></span><span class="sub-title">联系客服</span></a>
           </li>
         </ul>
@@ -127,13 +128,3 @@
 </body>
 </html>
 
-<script type="text/javascript">
-function setCookie(name,value) 
-{ 
-    var Days = 30; 
-    var exp = new Date(); 
-    exp.setTime(exp.getTime()); 
-    document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
-    location.href = "../index.php";
-} 
-</script>
