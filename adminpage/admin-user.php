@@ -26,13 +26,13 @@
         echo "<script language=javascript>location.href='../index.php';</script>";
     }
     
-    if(isset($_GET['code']))
+    if(isset($_GET['act']))
     {
-//         if($_GET['code'] != $_SESSION['identitycode'])
-//         { 
-//             _alert_back('数据提交出错！');
-//             exit;
-//         }
+        if($_GET['code'] != $_SESSION['identitycode'])
+        { 
+            _jumplocation('admin-user.php');
+            exit;
+        }
         if($_GET['act']=='delete')
         {
             $_deleted_mysql_fetch = mysql_fetch_assoc(mysql_query("SELECT * FROM `user_info` WHERE `user_uid` LIKE '{$_GET['value']}'"));
@@ -52,10 +52,15 @@
                 _alert_back('用户不存在');
             }
         }
+        else if($_GET['act'] == 'edit')
+        {
+            $_edit_mysql_fetch = mysql_fetch_assoc(mysql_query("SELECT * FROM `user_info` WHERE `user_uid` LIKE '{$_GET['value']}'"));
+            
+        }
     }
 
 
-
+    mysql_close();
     $_SESSION['identitycode'] = md5(mt_rand());//生成页面唯一标识码
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -63,15 +68,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no"/>
-<title>用户主页</title>
-
-
+<title>管理系统-用户管理</title>
 
 <link href="../bootstrap-3.3.5-dist/css/bootstrap.min.css" title="" rel="stylesheet" />
 <link title="" href="../css/style.css" rel="stylesheet" type="text/css"  />
 <link title="blue" href="../css/dermadefault.css" rel="stylesheet" type="text/css"/>
 <link href="../css/templatecss.css" rel="stylesheet" title="" type="text/css" />
-<link href="../css/editform.css" rel="stylesheet" title="" type="text/css" />
+<link rel="shortcut icon" href="../icon/pooh.ico" />	
 <!-- <script src="script/jquery-1.11.1.min.js" type="text/javascript"></script> -->
 <!-- <script src="script/jquery.cookie.js" type="text/javascript"></script> -->
 <script src="../bootstrap-3.3.5-dist/js/bootstrap.min.js" type="text/javascript"></script>
@@ -143,210 +146,94 @@
               <div class="clearfix"></div>
             </div>
 
-             <!-------------------------------------------信息主体页面----------------------------------------------------------->
-             <?php if(isset($_GET['act']) && $_GET['act'] == 'edit'){?>
-             <div id="main">
-                <form id="baseInfoForm" name="baseInfoForm" method="post" class="infoForm">
-                    <div id="main-profile" class="parts">
-                        <p>
-                            <label>当前头像：</label>
-                            <span class="pf-avatar-box">
-                                <a class="pf-avatar"></a>
-                                <a href="#" class="pf-edit-avatar">编辑头像</a>
-                            </span>
-                        </p>
-                        <p>
-                            <label>昵称：<em>*</em></label>
-                            <input id="J_uniqueName-mask" class="f-txt" type="text" value="狂晕的KT" maxlength="25">
-                            <input id="J_uniqueName" name="_fm.b._0.u" type="hidden" value="狂晕的KT" maxlength="25">
-                        </p>
-                        <p class="input-help-text"></p>
-                        <p>
-                            <label>真实姓名：</label>
-                            <input id="J_realname-mask" class="f-txt" type="text" value="邝韵涛" maxlength="6">
-                            <input id="J_realname" name="_fm.b._0.r" type="hidden" value="邝韵涛" maxlength="6">
-                        </p>
-                        <p>
-                            <label>性别：<em>*</em></label>
-                            <label for="J_gender1" class="except"><input id="J_gender1" type="radio" name="_fm.b._0.g" value="0"  checked="checked" />男</label>
-                            <label for="J_gender2" class="except"><input id="J_gender2" type="radio" name="_fm.b._0.g" value="1" />女</label>
-                        </p>
-                        <p>
-                            <label>生日：</label>
-                            <select id="J_Year" name="_fm.b._0.y">
-                                <option  >年</option>
-                                                            <option value="1940"  >1940</option>
-                                                            <option value="1941"  >1941</option>
-                                                            <option value="1942"  >1942</option>
-                                                            <option value="1943"  >1943</option>
-                                                            <option value="1944"  >1944</option>
-                                                            <option value="1945"  >1945</option>
-                                                            <option value="1946"  >1946</option>
-                                                            <option value="1947"  >1947</option>
-                                                            <option value="1948"  >1948</option>
-                                                            <option value="1949"  >1949</option>
-                                                            <option value="1950"  >1950</option>
-                                                            <option value="1951"  >1951</option>
-                                                            <option value="1952"  >1952</option>
-                                                            <option value="1953"  >1953</option>
-                                                            <option value="1954"  >1954</option>
-                                                            <option value="1955"  >1955</option>
-                                                            <option value="1956"  >1956</option>
-                                                            <option value="1957"  >1957</option>
-                                                            <option value="1958"  >1958</option>
-                                                            <option value="1959"  >1959</option>
-                                                            <option value="1960"  >1960</option>
-                                                            <option value="1961"  >1961</option>
-                                                            <option value="1962"  >1962</option>
-                                                            <option value="1963"  >1963</option>
-                                                            <option value="1964"  >1964</option>
-                                                            <option value="1965"  >1965</option>
-                                                            <option value="1966"  >1966</option>
-                                                            <option value="1967"  >1967</option>
-                                                            <option value="1968"  >1968</option>
-                                                            <option value="1969"  >1969</option>
-                                                            <option value="1970"  >1970</option>
-                                                            <option value="1971"  >1971</option>
-                                                            <option value="1972"  >1972</option>
-                                                            <option value="1973"  >1973</option>
-                                                            <option value="1974"  >1974</option>
-                                                            <option value="1975"  >1975</option>
-                                                            <option value="1976"  >1976</option>
-                                                            <option value="1977"  >1977</option>
-                                                            <option value="1978"  >1978</option>
-                                                            <option value="1979"  >1979</option>
-                                                            <option value="1980"  >1980</option>
-                                                            <option value="1981"  >1981</option>
-                                                            <option value="1982"  >1982</option>
-                                                            <option value="1983"  >1983</option>
-                                                            <option value="1984"  >1984</option>
-                                                            <option value="1985"  >1985</option>
-                                                            <option value="1986"  >1986</option>
-                                                            <option value="1987"  >1987</option>
-                                                            <option value="1988"  >1988</option>
-                                                            <option value="1989"  >1989</option>
-                                                            <option value="1990"  >1990</option>
-                                                            <option value="1991"   selected="selected"  >1991</option>
-                                                            <option value="1992"  >1992</option>
-                                                            <option value="1993"  >1993</option>
-                                                            <option value="1994"  >1994</option>
-                                                            <option value="1995"  >1995</option>
-                                                            <option value="1996"  >1996</option>
-                                                            <option value="1997"  >1997</option>
-                                                            <option value="1998"  >1998</option>
-                                                            <option value="1999"  >1999</option>
-                                                            <option value="2000"  >2000</option>
-                                                            <option value="2001"  >2001</option>
-                                                            <option value="2002"  >2002</option>
-                                                            <option value="2003"  >2003</option>
-                                                            <option value="2004"  >2004</option>
-                                                            <option value="2005"  >2005</option>
-                                                            <option value="2006"  >2006</option>
-                                                            <option value="2007"  >2007</option>
-                                                            <option value="2008"  >2008</option>
-                                                            <option value="2009"  >2009</option>
-                                                            <option value="2010"  >2010</option>
-                                                            <option value="2011"  >2011</option>
-                                                            <option value="2012"  >2012</option>
-                                                            <option value="2013"  >2013</option>
-                                                            <option value="2014"  >2014</option>
-                                                            <option value="2015"  >2015</option>
-                                                            <option value="2016"  >2016</option>
-                                                            <option value="2017"  >2017</option>
-                                                        </select>
-                            <select id="J_Month" name="_fm.b._0.m">
-                                <option  >月</option>
-                                                            <option value="1"  >1</option>
-                                                            <option value="2"  >2</option>
-                                                            <option value="3"  >3</option>
-                                                            <option value="4"  >4</option>
-                                                            <option value="5"  >5</option>
-                                                            <option value="6"  selected="selected"   >6</option>
-                                                            <option value="7"  >7</option>
-                                                            <option value="8"  >8</option>
-                                                            <option value="9"  >9</option>
-                                                            <option value="10"  >10</option>
-                                                            <option value="11"  >11</option>
-                                                            <option value="12"  >12</option>
-                                                        </select>
-                            <select  id="J_Date"  name="_fm.b._0.d">
-                                <option  >日</option>
-                                                            <option value="1"  >1</option>
-                                                            <option value="2"  >2</option>
-                                                            <option value="3"  >3</option>
-                                                            <option value="4"  >4</option>
-                                                            <option value="5"  >5</option>
-                                                            <option value="6"  >6</option>
-                                                            <option value="7"  >7</option>
-                                                            <option value="8"  >8</option>
-                                                            <option value="9"  >9</option>
-                                                            <option value="10"  >10</option>
-                                                            <option value="11"  >11</option>
-                                                            <option value="12"  >12</option>
-                                                            <option value="13"  >13</option>
-                                                            <option value="14"  >14</option>
-                                                            <option value="15"  >15</option>
-                                                            <option value="16"  >16</option>
-                                                            <option value="17"  >17</option>
-                                                            <option value="18"  >18</option>
-                                                            <option value="19"  >19</option>
-                                                            <option value="20"  >20</option>
-                                                            <option value="21"  >21</option>
-                                                            <option value="22"  >22</option>
-                                                            <option value="23"  >23</option>
-                                                            <option value="24"  >24</option>
-                                                            <option value="25"  >25</option>
-                                                            <option value="26"  >26</option>
-                                                            <option value="27"  >27</option>
-                                                            <option value="28"  >28</option>
-                                                            <option value="29"  selected="selected"   >29</option>
-                                                            <option value="30"  >30</option>
-                                                            <option value="31"  >31</option>
-                                                        </select>
-                        </p>
-                        <div class="sns-msg" id="J_birthdayTip" style="display:none;">
-                            <p class="error">生日如果填写的话请填写完整！</p>
-                        </div>
-                                                    <p>
-                            <label>居住地：</label>
-                            <select name="_fm.b._0.p" id="J_redstar_province" ></select>
-                            <select name="_fm.b._0.c" id="J_redstar_city"  ></select>
-                            <select name="_fm.b._0.a" id="J_redstar_area"  ></select>
-                            <input id="divisionCode" value="440113" type="hidden" name="_fm.b._0.di" />
-                        </p>
-                        <div class="sns-msg" id="J_redstarTip" style="display:none;">
-                            <p class="error">居住地所在的省市区为必填项！</p>
-                        </div>
-                                                    <p>
-                            <label>家乡：</label>
-                            <select id="J_live_province" name="_fm.b._0.ho"></select>
-                            <select id="J_live_city" name="_fm.b._0.hom"></select>
-                            <select id="J_live_area" name="_fm.b._0.home"></select>
-                            <input type="hidden" name="_fm.b._0.l" value="440103" id="liveDivisionCode"/>
-                        </p>
-                    </div>
-                    <div class="act skin-blue">
-                        <span class="btn n-btn">
-                            <button type="submit" id="J_saveProfile">保存</button>
-                            <div style="width:1px; height:1px; overflow:hidden; " >
-                                <input type="submit" ></input>
-                            </div>
-                        </span>
-                    </div>
-                </form>
-             </div>
-             <?php }else{?>
-               <!-----------------------------------------用户列表显示--------------------------------------------------------->
+               
+               <!-------------------------------------------信息主体页面----------------------------------------------------------->
+               <?php if(isset($_GET['act']) && $_GET['act'] == 'edit' && isset($_GET['func'])){ print_r($_POST);} ?>
+               
+               <!----------------------------------------编辑用户信息------------------------------------------------------>
+               <?php if(isset($_GET['act']) && $_GET['act'] == 'edit'){ ?>
+                   <div>
+                       <form name="editlogininfo" method="post" style='margin:50px 0 0 100px;width:1300px;border:1px solid #bbbbbb;'
+                             action="admin-user.php?act=edit&func=editlogininfo&value=<?php echo $_edit_mysql_fetch['user_uid'];?>&code=<?php echo $_SESSION['identitycode'];?>" >
+                       <h4 style ="font-size:20px;" align="center"><strong>登陆信息</strong></h4>
+                                <p style ="font-size:18px;margin:20px 0 10px 0;"> 
+                                    <label for="editusername" class="uname" style='margin-left:50px;width:100px;'>用 户 名:</label>
+                                    <input id="editusername" name="editusername" required="required" type="text" style='width:350px;'
+                                           value=<?php echo $_edit_mysql_fetch['user_name']; ?> />
+                                </p>
+                                <p style ="font-size:18px;margin:20px 0 10px 0;">           
+                                    <label for="editemail" class="youmail" style='margin-left:50px;width:100px;'>邮 箱:</label>
+                                    <input id="editemail" name="editemail" required="required" type="email"  style='width:350px;'
+                                           value=<?php echo $_edit_mysql_fetch['user_email']; ?> /> 
+                                </p>
+                                <p style ="font-size:18px;margin:20px 0 10px 0;">          
+                                    <label for="editphonenum" class="phone" style='margin-left:50px;width:100px;'>联系电话:</label>
+                                    <input id="editphonenum" name="editphonenum" required="required" type="text" style='width:350px;'
+                                           value=<?php echo $_edit_mysql_fetch['user_phone']; ?> />
+                                    <input type="submit" value="保存" style="margin-left:700px;"/> 
+                                </p>
+                       </form>
+                       
+                       <form name="editpwd" method="post" style="margin:30px 0 0 100px ;width:1300px;border:1px solid #bbbbbb;"
+                             action="admin-user.php?act=edit&func=editpwd&value=<?php echo $_edit_mysql_fetch['user_uid'];?>&code=<?php echo $_SESSION['identitycode'];?>">
+                       <h4 style ="font-size:20px;" align="center"><strong>密码修改</strong></h4>
+                                <input type="hidden" name="edituserid" value=<?php echo $_edit_mysql_fetch['user_uid'];?> />
+                                <p style ="font-size:18px;margin:20px 0 10px 0;"> 
+                                    <label for="editpassword" class="youpasswd" style='margin-left:50px;width:100px;'>密 码：</label>
+                                    <input id="editpassword" name="editpassword" required="required" type="password" style='width:350px;'/>
+                                </p>
+                                <p style ="font-size:18px;margin:20px 0 10px 0;"> 
+                                    <label for="editpassword_confirm" class="youpasswd" style='margin-left:50px;width:100px;'>确认密码：</label>
+                                    <input id="editpassword_confirm" name="editpassword_confirm" required="required" type="password" style='width:350px;'/>
+                                    <input type="submit" value="保存" style="margin-left:700px;"/>
+                                </p>
+                      </form>
+                       
+                      <form name="editbaseinfo" method="post" style='margin:50px 0 15px 100px;width:1300px;border:1px solid #bbbbbb;'
+                            action="admin-user.php?act=edit&func=editbaseinfo&value=<?php echo $_edit_mysql_fetch['user_uid'];?>&code=<?php echo $_SESSION['identitycode'];?>">
+                      <h4 style ="font-size:20px;" align="center"><strong>基本信息</strong></h4>
+                                <p style ="font-size:18px;margin:20px 0 10px 50px;"> 
+                                    <label for="editusersex" class="sex" >性 别:</label>
+                                    <input id="editusersex" name="editusersex" type="radio" checked="checked" value='M' style='margin-left:10px;'/>男
+                                    <input id="editusersex" name="editusersex" type="radio" value='W' style='margin-left:10px;'/>女
+                                </p>
+                                <p style ="font-size:18px;margin:20px 0 10px 0;">          
+                                    <label for="editrealname" class="realname" style='margin-left:50px;width:100px;'>真实姓名:</label>
+                                    <input id="editrealname" name="editrealname" type="text" style='width:350px;'
+                                            />
+                                </p>
+                                <p style ="font-size:18px;margin:20px 0 10px 0;">          
+                                    <label for="editbirthday" class="phone" style='margin-left:50px;width:100px;'>出生年月:</label>
+                                    <input id="editbirthday" name="editbirthday-y" type="text" style='width:100px;'/> 年
+                                    <input id="editbirthday" name="editbirthday-m" type="text" style='width:75px;'/> 月
+                                    <input id="editbirthday" name="editbirthday-d" type="text" style='width:75px;'/> 日     
+                                </p>
+                                <p style ="font-size:18px;margin:20px 0 10px 0;">          
+                                    <label for="edituserocc" class="phone" style='margin-left:50px;width:100px;'>行 业:</label>
+                                    <input id="edituserocc" name="edituserocc" type="text" style='width:350px;'
+                                           />
+                                </p>
+                                <p style ="font-size:18px;margin:20px 0 10px 0;">          
+                                    <label for="edituseraddr" class="phone" style='margin-left:50px;width:100px;'>联系地址:</label>
+                                    <textarea id="edituseraddr" name="edituseraddr"  style="width:350px;height:60px;"></textarea>
+                                    <input type="submit" value="保存" style="margin-left:700px;"/>
+                                </p>
+                      </form>
+               </div>
+               <!--------------------------------------------------------------------------------------------------->
+               
+               <!----------------------------------------用户信息显示------------------------------------------------------>
+               <?php }else if(!isset($_GET['act'])){?>
                <div class="row newslist" style="margin:30px 0 0 50px ;width:2000px;">
                   <div class="col-md-8">
                     <div class="panel panel-default"> 
                          <div class="panel-body">
                          <div class="w5 pull-left text-center"><strong>序号</strong></div>
                          <div class="w10 pull-left text-center"><strong>用户编号</strong></div>
-                         <div class="w15 pull-left text-center"><strong>用户名</strong></div>
+                         <div class="w15 pull-left text-center"><strong>用户名称</strong></div>
                          <div class="w20 pull-left text-center"><strong>邮箱</strong></div>
                          <div class="w20 pull-left text-center"><strong>电话号码</strong></div>
-                         <div class="w20 pull-left text-center"><strong>注册时间</strong></div>
+                         <div class="w20 pull-left text-center"><strong>添加时间</strong></div>
                          <div class="w10 pull-left text-center"><strong>操作</strong></div></div>
                       <?php   
                         if(isset($_GET['show']) && $_GET['show']=='all')
@@ -370,8 +257,8 @@
                                 <div class="w20 pull-left text-center"><?php echo $_mysql_fetch['user_email']; ?></div>
                                 <div class="w20 pull-left text-center"><?php echo $_mysql_fetch['user_phone']; ?></div>
                                 <div class="w20 pull-left text-center"><?php echo $_mysql_fetch['user_rt']; ?></div>
-                                <div class="text-center\">
-                                    <a href="admin-user.php?act=edit&value=<?php echo $_mysql_fetch['user_uid']; ?>&code=<?php echo $_SESSION['identitycode']; ?>">
+                                <div class="text-center\" >
+                                    <a style='text-decoration:none;' href="admin-user.php?act=edit&value=<?php echo $_mysql_fetch['user_uid'];?>&code=<?php echo $_SESSION['identitycode'];?>">
                                         <button>编辑</button>
                                     </a>
                                     <a href="javascript:if(confirm('确实要删除该用户吗?'))location='admin-user.php?act=delete&value=<?php echo $_mysql_fetch['user_uid']; ?>&code=<?php echo $_SESSION['identitycode']; ?>'">
@@ -379,20 +266,23 @@
                                     </a>
                                 </div>
                             </div>
-                       <?php }                                                                                                              ?>
+                       <?php } ?>
                             <div class="panel-body text-center">
                        <?php if(!isset($_GET['show'])){                                                                                     ?>
                                     <a href="admin-user.php?show=all" style="color:#5297d6;">展开所有记录</a>
                        <?php }else{ ?>
                                     <a href="admin-user.php" style="color:#5297d6;">收起所有记录</a>
-                       <?php }}                                                                                                              ?>
+                       <?php }} ?>
+                       
                     </div>
                   </div>
-               </div>
-               <!------------------------------------------------------------------------------------------------------------------->
-               </div>
+                </div>
+              </div>
+              <!------------------------------------------------------------------------------------------------------------------->
             </div>
        </div>			
 	 </div>
 </body>
 </html>
+
+

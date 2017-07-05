@@ -31,12 +31,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no"/>
-<title>用户主页</title>
+<title>管理系统-<?php echo $_mysql_fetch['user_name']; ?></title>
 
 <link href="../bootstrap-3.3.5-dist/css/bootstrap.min.css" title="" rel="stylesheet" />
 <link title="" href="../css/style.css" rel="stylesheet" type="text/css"  />
 <link title="blue" href="../css/dermadefault.css" rel="stylesheet" type="text/css"/>
 <link href="../css/templatecss.css" rel="stylesheet" title="" type="text/css" />
+<link rel="shortcut icon" href="../icon/pooh.ico" />
 <!-- <script src="script/jquery-1.11.1.min.js" type="text/javascript"></script> -->
 <!-- <script src="script/jquery.cookie.js" type="text/javascript"></script> -->
 <script src="../bootstrap-3.3.5-dist/js/bootstrap.min.js" type="text/javascript"></script>
