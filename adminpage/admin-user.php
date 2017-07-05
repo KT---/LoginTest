@@ -60,7 +60,6 @@
     }
 
 
-    mysql_close();
     $_SESSION['identitycode'] = md5(mt_rand());//生成页面唯一标识码
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -272,7 +271,10 @@
                                     <a href="admin-user.php?show=all" style="color:#5297d6;">展开所有记录</a>
                        <?php }else{ ?>
                                     <a href="admin-user.php" style="color:#5297d6;">收起所有记录</a>
-                       <?php }} ?>
+                       <?php }
+                        } 
+                        mysql_close();
+                       ?>
                        
                     </div>
                   </div>
