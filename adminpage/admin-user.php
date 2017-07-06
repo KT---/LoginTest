@@ -12,8 +12,9 @@
     //定义变量标识符，防止inc、func文件恶意调用
     define('LT_req',true);
     
-    require dirname(__FILE__).'./../function/login-register.func.php';
-    require dirname(__FILE__).'./../include/mysql.inc.php';
+//     require dirname(__FILE__).'./../function/login-register.func.php';
+//     require dirname(__FILE__).'./../include/mysql.inc.php';
+       require dirname(__FILE__).'./../function/edit-info.func.php';
     
     if(!isset($_COOKIE['LT_uid']))
     {
@@ -33,6 +34,8 @@
             _jumplocation('admin-user.php');
             exit;
         }
+        
+        /***************************************************删除用户********************************************************/
         if($_GET['act']=='delete')
         {
             $_deleted_mysql_fetch = mysql_fetch_assoc(mysql_query("SELECT * FROM `user_info` WHERE `user_uid` LIKE '{$_GET['value']}'"));
@@ -52,9 +55,22 @@
                 _alert_back('用户不存在');
             }
         }
+        /*******************************************************************************************************************/
+        
         else if($_GET['act'] == 'edit')
         {
             $_edit_mysql_fetch = mysql_fetch_assoc(mysql_query("SELECT * FROM `user_info` WHERE `user_uid` LIKE '{$_GET['value']}'"));
+            if(isset($_GET['func']))
+            {
+                switch ($_GET['func'])
+                {
+                    case 'editlogininfo':_checkupdata_editlogininfo($_POST,$_edit_mysql_fetch);break;
+                    case 'editpwd':_checkupdata_editpwd($_POST['editpassword'],$_POST['editpassword_confirm'],$_edit_mysql_fetch);break;
+                    case 'editbaseinfo':_alert_back('基本信息');break;
+                        
+                }
+                _aler_jump('操作成功', 'admin-user.php');
+            }
             
         }
     }
@@ -147,8 +163,7 @@
 
                
                <!-------------------------------------------信息主体页面----------------------------------------------------------->
-               <?php if(isset($_GET['act']) && $_GET['act'] == 'edit' && isset($_GET['func'])){ print_r($_POST);} ?>
-               
+
                <!----------------------------------------编辑用户信息------------------------------------------------------>
                <?php if(isset($_GET['act']) && $_GET['act'] == 'edit'){ ?>
                    <div>
@@ -156,23 +171,27 @@
                              action="admin-user.php?act=edit&func=editlogininfo&value=<?php echo $_edit_mysql_fetch['user_uid'];?>&code=<?php echo $_SESSION['identitycode'];?>" >
                        <h4 style ="font-size:20px;" align="center"><strong>登陆信息</strong></h4>
                                 <p style ="font-size:18px;margin:20px 0 10px 0;"> 
-                                    <label for="editusername" class="uname" style='margin-left:50px;width:100px;'>用 户 名:</label>
+                                    <label for="edituserid" style='margin-left:50px;width:100px;'>用户编号:</label>
+                                    <span id="edituserid" style ="font-size:18px;"><?php echo $_edit_mysql_fetch['user_id']; ?></span>
+                                </p>
+                                <p style ="font-size:18px;margin:20px 0 10px 0;"> 
+                                    <label for="editusername"  style='margin-left:50px;width:100px;'>用 户 名:</label>
                                     <input id="editusername" name="editusername" required="required" type="text" style='width:350px;'
                                            value=<?php echo $_edit_mysql_fetch['user_name']; ?> />
                                 </p>
                                 <p style ="font-size:18px;margin:20px 0 10px 0;">           
-                                    <label for="editemail" class="youmail" style='margin-left:50px;width:100px;'>邮 箱:</label>
+                                    <label for="editemail"  style='margin-left:50px;width:100px;'>邮 箱:</label>
                                     <input id="editemail" name="editemail" required="required" type="email"  style='width:350px;'
                                            value=<?php echo $_edit_mysql_fetch['user_email']; ?> /> 
                                 </p>
                                 <p style ="font-size:18px;margin:20px 0 10px 0;">          
-                                    <label for="editphonenum" class="phone" style='margin-left:50px;width:100px;'>联系电话:</label>
+                                    <label for="editphonenum"  style='margin-left:50px;width:100px;'>联系电话:</label>
                                     <input id="editphonenum" name="editphonenum" required="required" type="text" style='width:350px;'
                                            value=<?php echo $_edit_mysql_fetch['user_phone']; ?> />
                                     <input type="submit" value="保存" style="margin-left:700px;"/> 
                                 </p>
                        </form>
-                       
+
                        <form name="editpwd" method="post" style="margin:30px 0 0 100px ;width:1300px;border:1px solid #bbbbbb;"
                              action="admin-user.php?act=edit&func=editpwd&value=<?php echo $_edit_mysql_fetch['user_uid'];?>&code=<?php echo $_SESSION['identitycode'];?>">
                        <h4 style ="font-size:20px;" align="center"><strong>密码修改</strong></h4>
@@ -187,7 +206,7 @@
                                     <input type="submit" value="保存" style="margin-left:700px;"/>
                                 </p>
                       </form>
-                       
+ 
                       <form name="editbaseinfo" method="post" style='margin:50px 0 15px 100px;width:1300px;border:1px solid #bbbbbb;'
                             action="admin-user.php?act=edit&func=editbaseinfo&value=<?php echo $_edit_mysql_fetch['user_uid'];?>&code=<?php echo $_SESSION['identitycode'];?>">
                       <h4 style ="font-size:20px;" align="center"><strong>基本信息</strong></h4>
@@ -220,7 +239,7 @@
                       </form>
                </div>
                <!--------------------------------------------------------------------------------------------------->
-               
+
                <!----------------------------------------用户信息显示------------------------------------------------------>
                <?php }else if(!isset($_GET['act'])){?>
                <div class="row newslist" style="margin:30px 0 0 50px ;width:2000px;">
