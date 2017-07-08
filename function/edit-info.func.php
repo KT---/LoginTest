@@ -40,5 +40,9 @@ function _checkupdata_editpwd($_edit_pwd,$_check_pwd,$_user_info)
     mysql_query("UPDATE `user_info` SET `user_pwd` = '{$_updata_pwd}' WHERE `user_info`.`user_id` = {$_user_info['user_id']}");
 }
 
+function _check_updatainsert_editbaseinfo($_base_info)
+{
+    
+}
 
 ?>

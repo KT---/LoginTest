@@ -166,8 +166,8 @@
 
                <!----------------------------------------编辑用户信息------------------------------------------------------>
                <?php if(isset($_GET['act']) && $_GET['act'] == 'edit'){ ?>
-                   <div>
-                       <form name="editlogininfo" method="post" style='margin:50px 0 0 100px;width:1300px;border:1px solid #bbbbbb;'
+                   <div style='width:1200px;'>
+                       <form name="editlogininfo" method="post" style='margin:50px 0 0 100px;width:auto;border:1px solid #bbbbbb;'
                              action="admin-user.php?act=edit&func=editlogininfo&value=<?php echo $_edit_mysql_fetch['user_uid'];?>&code=<?php echo $_SESSION['identitycode'];?>" >
                        <h4 style ="font-size:20px;" align="center"><strong>登陆信息</strong></h4>
                                 <p style ="font-size:18px;margin:20px 0 10px 0;"> 
@@ -188,11 +188,11 @@
                                     <label for="editphonenum"  style='margin-left:50px;width:100px;'>联系电话:</label>
                                     <input id="editphonenum" name="editphonenum" required="required" type="text" style='width:350px;'
                                            value=<?php echo $_edit_mysql_fetch['user_phone']; ?> />
-                                    <input type="submit" value="保存" style="margin-left:700px;"/> 
+                                    <input type="submit" value="保存" style="width:100px;float:right; margin-right:30px;"/> 
                                 </p>
                        </form>
 
-                       <form name="editpwd" method="post" style="margin:30px 0 0 100px ;width:1300px;border:1px solid #bbbbbb;"
+                       <form name="editpwd" method="post" style="margin:30px 0 0 100px ;width:auto;border:1px solid #bbbbbb;"
                              action="admin-user.php?act=edit&func=editpwd&value=<?php echo $_edit_mysql_fetch['user_uid'];?>&code=<?php echo $_SESSION['identitycode'];?>">
                        <h4 style ="font-size:20px;" align="center"><strong>密码修改</strong></h4>
                                 <input type="hidden" name="edituserid" value=<?php echo $_edit_mysql_fetch['user_uid'];?> />
@@ -203,15 +203,15 @@
                                 <p style ="font-size:18px;margin:20px 0 10px 0;"> 
                                     <label for="editpassword_confirm" class="youpasswd" style='margin-left:50px;width:100px;'>确认密码：</label>
                                     <input id="editpassword_confirm" name="editpassword_confirm" required="required" type="password" style='width:350px;'/>
-                                    <input type="submit" value="保存" style="margin-left:700px;"/>
+                                    <input type="submit" value="保存" style="width:100px;float:right; margin-right:30px;"/>
                                 </p>
                       </form>
  
-                      <form name="editbaseinfo" method="post" style='margin:50px 0 15px 100px;width:1300px;border:1px solid #bbbbbb;'
+                      <form name="editbaseinfo" method="post" style='margin:50px 0 15px 100px;width:auto;border:1px solid #bbbbbb;'
                             action="admin-user.php?act=edit&func=editbaseinfo&value=<?php echo $_edit_mysql_fetch['user_uid'];?>&code=<?php echo $_SESSION['identitycode'];?>">
                       <h4 style ="font-size:20px;" align="center"><strong>基本信息</strong></h4>
                                 <p style ="font-size:18px;margin:20px 0 10px 50px;"> 
-                                    <label for="editusersex" class="sex" >性 别:</label>
+                                    <label for="editusersex" class="sex" style='width:100px;' >性 别:</label>
                                     <input id="editusersex" name="editusersex" type="radio" checked="checked" value='M' style='margin-left:10px;'/>男
                                     <input id="editusersex" name="editusersex" type="radio" value='W' style='margin-left:10px;'/>女
                                 </p>
@@ -234,7 +234,7 @@
                                 <p style ="font-size:18px;margin:20px 0 10px 0;">          
                                     <label for="edituseraddr" class="phone" style='margin-left:50px;width:100px;'>联系地址:</label>
                                     <textarea id="edituseraddr" name="edituseraddr"  style="width:350px;height:60px;"></textarea>
-                                    <input type="submit" value="保存" style="margin-left:700px;"/>
+                                    <input type="submit" value="保存" style="width:100px;float:right; margin-right:30px;"/>
                                 </p>
                       </form>
                </div>
@@ -242,7 +242,7 @@
 
                <!----------------------------------------用户信息显示------------------------------------------------------>
                <?php }else if(!isset($_GET['act'])){?>
-               <div class="row newslist" style="margin:30px 0 0 50px ;width:2000px;">
+               <div class="row newslist" style="margin:30px 0 0 50px ;width:1800px;">
                   <div class="col-md-8">
                     <div class="panel panel-default"> 
                          <div class="panel-body">
@@ -275,7 +275,7 @@
                                 <div class="w20 pull-left text-center"><?php echo $_mysql_fetch['user_email']; ?></div>
                                 <div class="w20 pull-left text-center"><?php echo $_mysql_fetch['user_phone']; ?></div>
                                 <div class="w20 pull-left text-center"><?php echo $_mysql_fetch['user_rt']; ?></div>
-                                <div class="text-center\" >
+                                <div class="text-center" >
                                     <a style='text-decoration:none;' href="admin-user.php?act=edit&value=<?php echo $_mysql_fetch['user_uid'];?>&code=<?php echo $_SESSION['identitycode'];?>">
                                         <button>编辑</button>
                                     </a>
