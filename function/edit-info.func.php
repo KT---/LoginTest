@@ -40,9 +40,64 @@ function _checkupdata_editpwd($_edit_pwd,$_check_pwd,$_user_info)
     mysql_query("UPDATE `user_info` SET `user_pwd` = '{$_updata_pwd}' WHERE `user_info`.`user_id` = {$_user_info['user_id']}");
 }
 
-function _check_updatainsert_editbaseinfo($_base_info)
+
+function _check_updatainsert_editbaseinfo($_base_info,$_user_info)
 {
+    $_mysql_query = mysql_fetch_assoc(mysql_query("SELECT * FROM `user_baseinfo` WHERE `user_id` = {$_user_info['user_id']} "));
+    if($_base_info['editbirthday-y'] != null || $_base_info['editbirthday-m'] != null || $_base_info['editbirthday-d'] != null)
+    {
+        $_base_info['editbirthday'] = _check_userbirth($_base_info['editbirthday-y'],$_base_info['editbirthday-m'],$_base_info['editbirthday-d']);
+    }
+    else
+    {
+        $_base_info['editbirthday'] = '1900-1-1';
+    }
+    if(isset($_mysql_query['user_id']))
+    {
+        if($_mysql_query['user_uid'] != $_user_info['user_uid'])
+        {
+            _alert_back('数据出错');
+        }
+        mysql_query("UPDATE `user_baseinfo` SET `user_sex` = '{$_base_info['editusersex']}', 
+                            `user_realname` = '{$_base_info['editrealname']}', 
+                            `user_birth` = '{$_base_info['editbirthday']}', 
+                            `user_occupation` = '{$_base_info['edituserocc']}', 
+                            `user_addr` = '{$_base_info['edituseraddr']}' WHERE 
+                            `user_baseinfo`.`user_id` = {$_user_info['user_id']};");
+    }
+    else
+    {
+        mysql_query("INSERT INTO `user_baseinfo` (`user_id`, 
+                                                  `user_uid`, 
+                                                  `user_sex`, 
+                                                  `user_realname`, 
+                                                  `user_birth`, 
+                                                  `user_occupation`, 
+                                                  `user_addr`) 
+                                          VALUES ('{$_user_info['user_id']}', 
+                                                  '{$_user_info['user_uid']}', 
+                                                  '{$_base_info['editusersex']}', 
+                                                  '{$_base_info['editrealname']}', 
+                                                  '{$_base_info['editbirthday']}', 
+                                                  '{$_base_info['edituserocc']}', 
+                                                  '{$_base_info['edituseraddr']}')");
+    }
+}
+
+
+function _check_userbirth($_year,$_month,$_day)
+{
+    $_date = $_year.'-'.$_month.'-'.$_day;
+    $_isdate = strtotime($_date);
     
+    if(($_isdate === false) || ($_isdate >= time()))
+    {
+        _alert_back('日期格式不正确');
+    }
+    else
+    {
+         return $_date;
+    } 
 }
 
 ?>

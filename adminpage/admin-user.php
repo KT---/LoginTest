@@ -60,18 +60,18 @@
         else if($_GET['act'] == 'edit')
         {
             $_edit_mysql_fetch = mysql_fetch_assoc(mysql_query("SELECT * FROM `user_info` WHERE `user_uid` LIKE '{$_GET['value']}'"));
+            $_baseinfo_mysql_fetch = mysql_fetch_assoc(mysql_query("SELECT * FROM `user_baseinfo` WHERE `user_uid` LIKE '{$_GET['value']}'"));
             if(isset($_GET['func']))
             {
                 switch ($_GET['func'])
                 {
                     case 'editlogininfo':_checkupdata_editlogininfo($_POST,$_edit_mysql_fetch);break;
                     case 'editpwd':_checkupdata_editpwd($_POST['editpassword'],$_POST['editpassword_confirm'],$_edit_mysql_fetch);break;
-                    case 'editbaseinfo':_alert_back('基本信息');break;
+                    case 'editbaseinfo':_check_updatainsert_editbaseinfo($_POST,$_edit_mysql_fetch);break;
                         
                 }
                 _aler_jump('操作成功', 'admin-user.php');
-            }
-            
+            } 
         }
     }
 
@@ -207,36 +207,61 @@
                                 </p>
                       </form>
  
-                      <form name="editbaseinfo" method="post" style='margin:50px 0 15px 100px;width:auto;border:1px solid #bbbbbb;'
+                      <form name="editbaseinfo" method="post" style='margin:50px 0 0 100px;width:auto;border:1px solid #bbbbbb;'
                             action="admin-user.php?act=edit&func=editbaseinfo&value=<?php echo $_edit_mysql_fetch['user_uid'];?>&code=<?php echo $_SESSION['identitycode'];?>">
                       <h4 style ="font-size:20px;" align="center"><strong>基本信息</strong></h4>
                                 <p style ="font-size:18px;margin:20px 0 10px 50px;"> 
                                     <label for="editusersex" class="sex" style='width:100px;' >性 别:</label>
-                                    <input id="editusersex" name="editusersex" type="radio" checked="checked" value='M' style='margin-left:10px;'/>男
-                                    <input id="editusersex" name="editusersex" type="radio" value='W' style='margin-left:10px;'/>女
+                                    <input id="editusersex" name="editusersex" type="radio" 
+                                           <?php if($_baseinfo_mysql_fetch['user_sex']=='M'){echo "checked=\"checked\"";}?> 
+                                           value='M' style='margin-left:10px;'/> 男
+                                    <input id="editusersex" name="editusersex" type="radio" 
+                                           <?php if($_baseinfo_mysql_fetch['user_sex']=='W'){echo "checked=\"checked\"";}?>
+                                           value='W' style='margin-left:10px;'/> 女
                                 </p>
                                 <p style ="font-size:18px;margin:20px 0 10px 0;">          
                                     <label for="editrealname" class="realname" style='margin-left:50px;width:100px;'>真实姓名:</label>
-                                    <input id="editrealname" name="editrealname" type="text" style='width:350px;'
-                                            />
+                                    <input id="editrealname" name="editrealname" type="text" style='width:350px;' 
+                                           <?php 
+                                                if($_baseinfo_mysql_fetch['user_realname'] != null)
+                                                {
+                                                    echo "value=".$_baseinfo_mysql_fetch['user_realname'];
+                                                    $_user_birth = explode('-', $_baseinfo_mysql_fetch['user_birth']);
+                                                }
+                                                if($_baseinfo_mysql_fetch['user_birth'] != null && $_baseinfo_mysql_fetch['user_birth'] != '1900-01-01')
+                                                {
+                                                    $_user_birth = explode('-', $_baseinfo_mysql_fetch['user_birth']);
+                                                }
+                                           ?> />
                                 </p>
                                 <p style ="font-size:18px;margin:20px 0 10px 0;">          
                                     <label for="editbirthday" class="phone" style='margin-left:50px;width:100px;'>出生年月:</label>
-                                    <input id="editbirthday" name="editbirthday-y" type="text" style='width:100px;'/> 年
-                                    <input id="editbirthday" name="editbirthday-m" type="text" style='width:75px;'/> 月
-                                    <input id="editbirthday" name="editbirthday-d" type="text" style='width:75px;'/> 日     
+                                    <input id="editbirthday" name="editbirthday-y" type="text" style='width:100px;'<?php if(isset($_user_birth)){echo "value=".$_user_birth[0];}?> /> 年
+                                    <input id="editbirthday" name="editbirthday-m" type="text" style='width:75px;' <?php if(isset($_user_birth)){echo "value=".$_user_birth[1];}?> /> 月
+                                    <input id="editbirthday" name="editbirthday-d" type="text" style='width:75px;' <?php if(isset($_user_birth)){echo "value=".$_user_birth[2];}?> /> 日     
                                 </p>
                                 <p style ="font-size:18px;margin:20px 0 10px 0;">          
                                     <label for="edituserocc" class="phone" style='margin-left:50px;width:100px;'>行 业:</label>
                                     <input id="edituserocc" name="edituserocc" type="text" style='width:350px;'
-                                           />
+                                           <?php 
+                                                if($_baseinfo_mysql_fetch['user_occupation']!= null)
+                                                {
+                                                    echo "value=".$_baseinfo_mysql_fetch['user_occupation'];
+                                                }
+                                           ?> />
                                 </p>
                                 <p style ="font-size:18px;margin:20px 0 10px 0;">          
                                     <label for="edituseraddr" class="phone" style='margin-left:50px;width:100px;'>联系地址:</label>
-                                    <textarea id="edituseraddr" name="edituseraddr"  style="width:350px;height:60px;"></textarea>
+                                    <textarea id="edituseraddr" name="edituseraddr"  style="width:350px;height:60px;" ><?php
+                                                if($_baseinfo_mysql_fetch['user_addr']!= null)
+                                                {
+                                                    echo $_baseinfo_mysql_fetch['user_addr'];
+                                                }?></textarea>      
                                     <input type="submit" value="保存" style="width:100px;float:right; margin-right:30px;"/>
                                 </p>
                       </form>
+                      <div style="text-align: center;margin:10px 0 50px 0;"><a href="admin-user.php" style="font-size: 18px;">【返回】</a></div>
+                      
                </div>
                <!--------------------------------------------------------------------------------------------------->
 
@@ -286,7 +311,7 @@
                             </div>
                        <?php } ?>
                             <div class="panel-body text-center">
-                       <?php if(!isset($_GET['show'])){                                                                                     ?>
+                       <?php if(!(isset($_GET['show']) && $_GET['show']=='all')){                                                                                     ?>
                                     <a href="admin-user.php?show=all" style="color:#5297d6;">展开所有记录</a>
                        <?php }else{ ?>
                                     <a href="admin-user.php" style="color:#5297d6;">收起所有记录</a>
