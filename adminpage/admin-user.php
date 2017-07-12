@@ -18,7 +18,7 @@
     
     if(!isset($_COOKIE['LT_uid']))
     {
-        echo "<script language=javascript>location.href='index.php';</script>";
+        echo "<script language=javascript>location.href='../index.php';</script>";
     }
     
     $_mysql_fetch = mysql_fetch_assoc(mysql_query("SELECT * FROM `user_info` WHERE `user_uid` LIKE '{$_COOKIE['LT_uid']}'"));
@@ -29,7 +29,7 @@
     
     if(isset($_GET['act']))
     {
-        if($_GET['code'] != $_SESSION['identitycode'])
+        if(!isset($_GET['code']) || ($_GET['code'] != $_SESSION['identitycode']))
         { 
             _jumplocation('admin-user.php');
             exit;
@@ -57,6 +57,7 @@
         }
         /*******************************************************************************************************************/
         
+        /***************************************************编辑用户信息********************************************************/
         else if($_GET['act'] == 'edit')
         {
             $_edit_mysql_fetch = mysql_fetch_assoc(mysql_query("SELECT * FROM `user_info` WHERE `user_uid` LIKE '{$_GET['value']}'"));
@@ -73,6 +74,7 @@
                 _aler_jump('操作成功', 'admin-user.php');
             } 
         }
+        /*******************************************************************************************************************/
     }
 
 
@@ -226,7 +228,6 @@
                                                 if($_baseinfo_mysql_fetch['user_realname'] != null)
                                                 {
                                                     echo "value=".$_baseinfo_mysql_fetch['user_realname'];
-                                                    $_user_birth = explode('-', $_baseinfo_mysql_fetch['user_birth']);
                                                 }
                                                 if($_baseinfo_mysql_fetch['user_birth'] != null && $_baseinfo_mysql_fetch['user_birth'] != '1900-01-01')
                                                 {

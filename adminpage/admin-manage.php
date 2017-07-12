@@ -17,7 +17,7 @@
     
     if(!isset($_COOKIE['LT_uid']))
     {
-        echo "<script language=javascript>location.href='index.php';</script>";
+        echo "<script language=javascript>location.href='../index.php';</script>";
     }
     
     $_mysql_fetch = mysql_fetch_assoc(mysql_query("SELECT * FROM `user_info` WHERE `user_uid` LIKE '{$_COOKIE['LT_uid']}'"));
