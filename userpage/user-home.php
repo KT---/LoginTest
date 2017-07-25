@@ -77,7 +77,7 @@
         <ul class="navContent" style="display:block">
           <li>
             <div class="showtitle" style="width:100px;"><img src="../images/leftimg.png" />个人中心</div>
-            <a href="#"><span class="sublist-icon glyphicon glyphicon-user"></span><span class="sub-title">个人中心</span></a> 
+            <a href="user_personal.php"><span class="sublist-icon glyphicon glyphicon-user"></span><span class="sub-title">个人中心</span></a> 
           </li>
           <li>
             <div class="showtitle" style="width:100px;"><img src="../images/leftimg.png" />消费记录</div>

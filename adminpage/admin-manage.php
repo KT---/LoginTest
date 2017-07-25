@@ -48,7 +48,7 @@
                     '{$_deleted_mysql_fetch['user_name']}','{$_deleted_mysql_fetch['user_jurisdiction']}','{$_deleted_mysql_fetch['user_delete_time']}')") or die('数据库执行错误:'.mysql_error().print_r($_deleted_mysql_fetch));
                 
                 mysql_query("DELETE FROM `user_info` WHERE `user_info`.`user_uid` = '{$_GET['value']}'");
-                _alert_back('删除成功');
+                _aler_jump('删除成功', 'admin-manage.php');
             }
             else
             {
@@ -72,6 +72,41 @@
                 }
                 _aler_jump('操作成功', 'admin-manage.php');
             } 
+        }
+        /*******************************************************************************************************************/
+        
+        /***************************************************添加管理员********************************************************/
+        else if($_GET['act'] == 'add-manager')
+        {
+            $_manager_info = array();
+            if(isset($_POST['managername']))
+            {
+            /*******************检查验证码，检查用户名、邮箱、电话号码、密码格式正确性，并写连同时间戳及页面唯一标识码入缓存***********************/
+            $_manager_info['managername'] = _check_username($_POST['managername']);
+             $_manager_info['manageremail'] = _check_email($_POST['manageremail']); //检查用户名email地址格式合法性
+             $_manager_info['managerphonenum'] = _check_phonenum($_POST['managerphonenum'],11);
+            $_manager_info['managerpwd'] = sha1(md5(_check_password($_POST['managerpwd'],6,30,$_POST['managerpwd_confirm'])));//检查密码格式及加密
+            $_manager_info['$_timestamp'] = time()+8*60*60;
+            $_manager_info['timesignup'] = date("Y-m-d H:i:s",$_manager_info['$_timestamp']);
+            $_manager_info['uid'] = md5($_manager_info['$_timestamp']+19901117);
+            /*******************************************************************************************************/
+            
+            /****************************检查用户名、邮箱、电话号码是否被注册****************************************/
+            _check_mysql_repetition('user_name', 'user_info', 'user_name', $_manager_info['managername'],'用户名已被注册!');
+            _check_mysql_repetition('user_email', 'user_info', 'user_email', $_manager_info['manageremail'],'邮箱已被注册!');
+            _check_mysql_repetition('user_phone', 'user_info', 'user_phone', $_manager_info['managerphonenum'],'电话号码已被注册!');
+            /*******************************************************************************************************/
+            
+            /****************************将用户注册信息写入数据库***********************************************/
+            @mysql_query("INSERT INTO `user_info`(`user_uid`,`user_phone`,`user_pwd`,`user_rts`,`user_rt`,`user_email`,`user_name`,`user_jurisdiction`)
+                VALUES('{$_manager_info['uid']}','{$_manager_info['managerphonenum']}','{$_manager_info['managerpwd']}',
+                '{$_manager_info['$_timestamp']}','{$_manager_info['timesignup']}','{$_manager_info['manageremail']}',
+                '{$_manager_info['managername']}','admin')") or die('数据库执行错误:'.mysql_error());
+            /**********************************************************************************************/
+            
+            _aler_jump('添加成功', 'admin-manage.php');
+            }
+            
         }
         /*******************************************************************************************************************/
     }
@@ -164,7 +199,6 @@
 
                
                <!-------------------------------------------信息主体页面----------------------------------------------------------->
-               <!----------------------------------------编辑用户信息------------------------------------------------------>
 
                <!----------------------------------------编辑管理员信息------------------------------------------------------>
                <?php if(isset($_GET['act']) && $_GET['act'] == 'edit'){ ?>
@@ -173,7 +207,7 @@
                              action="admin-manage.php?act=edit&func=editlogininfo&value=<?php echo $_edit_mysql_fetch['user_uid'];?>&code=<?php echo $_SESSION['identitycode'];?>" >
                        <h4 style ="font-size:20px;" align="center"><strong>登陆信息</strong></h4>
                                 <p style ="font-size:18px;margin:20px 0 10px 0;"> 
-                                    <label for="edituserid" style='margin-left:50px;width:100px;'>管理员编号:</label>
+                                    <label for="editmid" style='margin-left:50px;width:100px;'>管理员编号:</label>
                                     <span id="edituserid" style ="font-size:18px;"><?php echo $_edit_mysql_fetch['user_id']; ?></span>
                                 </p>
                                 <p style ="font-size:18px;margin:20px 0 10px 0;"> 
@@ -211,9 +245,43 @@
                       <div style="text-align: center;margin:10px 0 50px 0;"><a href="admin-manage.php" style="font-size: 18px;">【返回】</a></div>
                       
                </div>
-               <!--------------------------------------------------------------------------------------------------->
-
-               <!----------------------------------------用户信息显示------------------------------------------------------>
+               <!----------------------------------------------------------------------------------------------------->
+               
+               <!----------------------------------------添加管理员------------------------------------------------------>
+               <?php }else if(isset($_GET['act']) && $_GET['act'] == 'add-manager'){ ?>
+                <div style='width:1200px;'>
+                       <form name="editlogininfo" method="post" style='margin:50px 0 0 100px;width:auto;border:1px solid #bbbbbb;'
+                             action="admin-manage.php?act=add-manager&code=<?php echo $_SESSION['identitycode'];?>" >
+                       <h4 style ="font-size:20px;" align="center"><strong>添加管理员</strong></h4>
+                                <p style ="font-size:18px;margin:20px 0 10px 0;"> 
+                                    <label for="managername"  style='margin-left:50px;width:100px;'>管理员名称:</label>
+                                    <input id="managername" name="managername" required="required" type="text" style='width:350px;' />
+                                </p>
+                                <p style ="font-size:18px;margin:20px 0 10px 0;">           
+                                    <label for="manageremail"  style='margin-left:50px;width:100px;'>邮   箱:</label>
+                                    <input id="manageremail" name="manageremail" required="required" type="email"  style='width:350px;' /> 
+                                </p>
+                                <p style ="font-size:18px;margin:20px 0 10px 0;">          
+                                    <label for="managerphonenum"  style='margin-left:50px;width:100px;'>联系电话:</label>
+                                    <input id="managerphonenum" name="managerphonenum" required="required" type="text" style='width:350px;'/>
+                                </p>
+                                <p style ="font-size:18px;margin:20px 0 10px 0;"> 
+                                    <label for="managerpwd" class="youpasswd" style='margin-left:50px;width:100px;'>密   码：</label>
+                                    <input id="managerpwd" name="managerpwd" required="required" type="password" style='width:350px;'/>
+                                </p>
+                                <p style ="font-size:18px;margin:20px 0 10px 0;"> 
+                                    <label for="managerpwd_confirm" class="youpasswd" style='margin-left:50px;width:100px;'>确认密码：</label>
+                                    <input id="managerpwd_confirm" name="managerpwd_confirm" required="required" type="password" style='width:350px;'/>
+                                    <input type="submit" value="添加管理员" style="width:120px;float:right; margin-right:30px;"/>
+                                </p>
+                       </form>
+                      <div style="text-align: center;margin:10px 0 50px 0;"><a href="admin-manage.php" style="font-size: 18px;">【返回】</a></div>
+                      
+               </div>
+               
+               <!----------------------------------------------------------------------------------------------------->
+               
+               <!----------------------------------------管理员信息显示------------------------------------------------------>
                <?php }else if(!isset($_GET['act'])){?>
                <div class="row newslist" style="margin:30px 0 0 50px ;width:1800px;">
                   <div class="col-md-8">
@@ -227,19 +295,13 @@
                          <div class="w20 pull-left text-center"><strong>添加时间</strong></div>
                          <div class="w10 pull-left text-center"><strong>操作</strong></div></div>
                       <?php   
-                        if(isset($_GET['show']) && $_GET['show']=='all')
-                        {
-                            $_i = mysql_fetch_assoc(mysql_query("select max(user_id) from user_info"))['max(user_id)'];
-                        }
-                        else
-                        {
-                            $_i = 10;
-                        } 
+
+                        $_i = mysql_fetch_assoc(mysql_query("select max(user_id) from user_info"))['max(user_id)'];
                         $num = 1;
                         for($_j=1;$_j<=$_i;$_j++)
                         {
                             $_mysql_fetch = mysql_fetch_assoc(mysql_query("SELECT * FROM `user_info` WHERE `user_id` LIKE $_j"));
-                            if(($_mysql_fetch['user_jurisdiction']!='admin') && ($_mysql_fetch['user_jurisdiction']!='root')){continue;}
+                            if(($_mysql_fetch['user_jurisdiction']!='admin')){continue;}
                       ?>
                             <div class="panel-body">
                                 <div class="w5 pull-left text-center"><?php echo $num++; ?></div>
@@ -252,14 +314,16 @@
                                     <a style='text-decoration:none;' href="admin-manage.php?act=edit&value=<?php echo $_mysql_fetch['user_uid'];?>&code=<?php echo $_SESSION['identitycode'];?>">
                                         <button>编辑</button>
                                     </a>
-                                    <a href="javascript:if(confirm('确实要删除该用户吗?'))location='admin-manage.php?act=delete&value=<?php echo $_mysql_fetch['user_uid']; ?>&code=<?php echo $_SESSION['identitycode']; ?>'">
+                                    <a href="javascript:if(confirm('确实要删除管理员吗?'))location='admin-manage.php?act=delete&value=<?php echo $_mysql_fetch['user_uid']; ?>&code=<?php echo $_SESSION['identitycode']; ?>'">                       
                                         <button>删除</button>
                                     </a>
                                 </div>
                             </div>
-                       <?php } ?>
-                            <div style="text-align: center;margin:50px 0 20px 0;"><a href="admin-manage.php?act=add-manage&code=<?php echo $_SESSION['identitycode'];?>"
-                                                                                     style="font-size: 18px;"><button>添加管理员</button></a></div>
+                       <?php 
+                        } ?>
+                            <div style="text-align: center;margin:50px 0 20px 0;">
+                                <a href="admin-manage.php?act=add-manager&code=<?php echo $_SESSION['identitycode'];?>"style="font-size: 18px;"><button>添加管理员</button></a>
+                            </div>
                        <?php 
                         } 
                         mysql_close();
