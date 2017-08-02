@@ -1,5 +1,5 @@
 <?php
-    echo "hello device!!\n\r";
+    echo "hello world!!\n\r";
     if(isset($_GET['value']))
     {
         print_r($_GET);
